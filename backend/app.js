@@ -111,7 +111,6 @@ app.post("/patientChangePassword", (req, res) => {
         res.send({ err: err });
       } else {
         if (result.length !== 0) {
-          console.log(result);
           var privateEncryptOld = result[0].privateEncrypt;
           let pbkdf2 = require("pbkdf2");
           let symmetricKey = pbkdf2.pbkdf2Sync(
@@ -123,17 +122,14 @@ app.post("/patientChangePassword", (req, res) => {
           );
           symmetricKey = symmetricKey.toString("hex");
           let aes256 = require("aes256");
-          console.log("126", privateEncryptOld);
           var decryptedPrivKey = aes256.decrypt(
             symmetricKey,
             privateEncryptOld
           );
-          console.log("130", decryptedPrivKey);
           var privateEncryptNew = aes256.encrypt(
             symmetricKey,
             decryptedPrivKey
           );
-          console.log("135", privateEncryptNew);
 
           db.query(
             "UPDATE patients SET Password=?, privateEncrypt=? WHERE PID=?",
@@ -168,7 +164,6 @@ app.post("/loginDoctor", (req, res) => {
 });
 
 app.get("/patients", (req, res) => {
-  // console.log("hfiefef");
   var eccryptoJS = require("eccrypto-js");
 
   db.query("SELECT* FROM patients", async (err, result) => {
@@ -176,9 +171,7 @@ app.get("/patients", (req, res) => {
       res.send({ err: err });
     } else {
       if (result) {
-        console.log(result.length);
         for (let i = 0; i < result.length; i++) {
-          console.log(result[i]);
           const password = result[i].Password;
           let pbkdf2 = require("pbkdf2");
           let symmetricKey = pbkdf2.pbkdf2Sync(
@@ -248,15 +241,9 @@ app.post("/patient/add", async (req, res) => {
 
   const str = "test message to encrypt";
   var privKey = keyPair.privateKey;
-  console.log("Buffer: ", privKey);
   var pubKey = keyPair.publicKey.toString("hex");
 
-  console.log("Public Key is: ", pubKey);
-  console.log("private key is: ", privKey);
-  // console.log("Private Key is: ", privKey.toString("hex"));
-  // pubKey = Buffer.from(pubKey, "hex").toString("base64");
   privKey = privKey.toString("hex");
-  console.log("In palin format, pric ke", privKey);
   let aes256 = require("aes256");
   symmetricKey = symmetricKey.toString("hex");
   var encryptedPrivKey = aes256.encrypt(symmetricKey, privKey);
@@ -280,15 +267,11 @@ app.post("/patient/updateEHR", async (req, res) => {
     async (err, result) => {
       if (result) {
         pubKey = result[0].publicKey;
-        console.log("This is the pubkey: ", pubKey);
         pubKey = Buffer.from(pubKey, "hex");
-        console.log(pubKey);
         const encrypted = await eccryptoJS.encrypt(
           pubKey,
           eccryptoJS.utf8ToBuffer(EHR)
         );
-        console.log(encrypted);
-
         db.query(
           "UPDATE patients SET EHR=?, iv=?, mac=?, ephemPubKey=?  WHERE PID=?",
           [
@@ -445,7 +428,6 @@ app.get("/getEHRRelated/:DID/:PID", (req, res) => {
     "SELECT EncryptedEHR, symm_key from relatedDidToPid WHERE DID=? AND PID=?",
     [did, pid],
     (err, result) => {
-      console.log("452", result);
       if (err) {
         res.send({ err: err });
       } else if (result) {
