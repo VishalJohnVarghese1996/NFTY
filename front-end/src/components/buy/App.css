@@ -1,0 +1,125 @@
+.App {
+    text-align: center;
+  }
+  
+  .form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .form input{
+    width: 300px;
+    height: 50px;
+    margin: 10px;
+    font-size: 20px;  
+  }
+  
+  label{
+    font-size: 20px;
+  }
+  
+  .card{
+    width:303px;
+    height: 386px;
+    border: 2px solid black;
+    border-radius: 15px;
+    margin: 20px 0px 100px 140px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif ;
+    
+    display: grid;
+    grid-template-columns: 300px;
+    grid-template-rows: 210px 100px 80px;
+    grid-template-areas: "image" "text" "stat";
+    display: inline-block;
+  
+    border-radius: 18px;
+    background: white;
+    box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.9);
+    font-family: roboto;
+    text-align: center;
+    transition: all .2s ease-in-out; 
+  }
+  
+  #updateInput{
+    width: 200px;
+    height: 20px;
+  }
+
+
+  .card-text {
+    grid-area: text;
+    margin: 30px 25px 25px 25px;
+  }
+  .card-text .date {
+    color: rgb(255, 7, 110);
+    font-size:16px;
+  }
+  .card-text p {
+    color: grey;
+    font-size:15px;
+    font-weight: 300;
+  }
+  .card-text h2 {
+    margin: 0px;
+    font-size:25px;
+  }
+
+  #img {
+    grid-area: image;
+    background-size: contain;
+    width: 300px;
+    height: 200px;
+    border-radius: 20px;
+    float: left;
+  }
+
+  .card-stat {
+    grid-area: stat; 
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    background: rgb(255, 7, 110);
+    height: 63px;
+  }
+
+
+  .card:hover {
+    transform: scale(1.15);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
+  }
+
+
+  .buybtn{
+    font-size: 28px;
+    margin: 13px 0px 0px 0px;
+    background-color: dodgerblue; 
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px black;
+    width: 200px;
+    color: black;
+  }
+
+  #parent_div_2{
+    width: 600px;
+    border: 2px black solid;
+    float: left;
+    margin: 50px 50px 50px 100px;
+    padding: 0px 50px 50px 50px;
+  }
+
+  #parent_div_2 p{
+    text-align: justify;
+    text-justify: inter-word;
+    font-size: 26px;
+    font-weight: bold;
+  }
+  #parent_div_2 #tokenName{
+    font-size: 50px;
+    font-weight: bolder;
+  }
+
+  #parent_div_2 #description{
+    font-size: 26px;
+    font-weight: normal;
+  }
