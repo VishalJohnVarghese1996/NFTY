@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import { default as React, useState } from "react";
 import { withRouter } from "react-router-dom";
 import Popup from "../popup-login/popup.js";
+import logo1 from '../../logo1.svg';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -46,10 +47,12 @@ function NavBar(props) {
           <Typography
             variant="h5"
             color="inherit"
+            href="/"
             noWrap
             className={classes.toolbarTitle}
           >
-            NFTY
+            <img height= '100px' width= '100px' src={logo1} alt="My logo" />
+            
           </Typography>
           <nav>
             {props.loggedIn ? (

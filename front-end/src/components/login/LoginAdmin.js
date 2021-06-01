@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import React, { useState } from "react";
 import { openSnackBar } from "../snackBar/SnackBar";
+import UserProfile from './SessionDetails';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -17,32 +18,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login(props) {  
-  const [userid, setUserid] = useState("");
-  const [password, setPassword] = useState("");
+
+export default function Login(props) { 
   const classes = useStyles();
+
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`http://localhost:3001/loginAdmin/`, {
-        userid,
+      .post('http://localhost:3001/login', {
+        userName,
         password,
       })
       .then((res) => {
-        if (
-          res.status === 200 &&
-          res.data.message !== "Wrong UserID/Password"
-        ) {
-          const token = res.data.token;
-          props.setLogin(token);
-          sessionStorage.setItem('UserId', userid);
-          console.log(userid);
-          props.history.push("/patients");
-          return;
-        } else {
-          openSnackBar({ message: "Authentication Error", type: "error" });
-        }
+        if (res.status == 200 && res.data.message != "Wrong username/Password") 
+          {
+            const token = res.data.token;
+            props.setLogin(token);
+            sessionStorage.setItem('UserName', userName);
+            UserProfile.setName(userName);
+            console.log(userName);
+            props.history.push("/patients");
+            return;
+          } else {
+            openSnackBar({ message: "Authentication Error", type: "error" });
+          }
       })
       .catch((error) => {
         let errorMessage;
@@ -70,16 +73,16 @@ export default function Login(props) {
                 color="textPrimary"
                 gutterBottom
               >
-                Please provide userID and password
+                Login
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth required>
-                <InputLabel htmlFor="username-input">User ID</InputLabel>
+                <InputLabel htmlFor="username-input">User Name</InputLabel>
                 <Input
-                  id="userid-input"
-                  value={userid}
-                  onChange={(e) => setUserid(e.target.value)}
+                  id="username-input"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
                   required
                 />
               </FormControl>
@@ -88,7 +91,7 @@ export default function Login(props) {
               <FormControl fullWidth required>
                 <InputLabel htmlFor="password-input">Password</InputLabel>
                 <Input
-                  id="firstname-input"
+                  id="password-input"
                   value={password}
                   type="password"
                   onChange={(e) => setPassword(e.target.value)}

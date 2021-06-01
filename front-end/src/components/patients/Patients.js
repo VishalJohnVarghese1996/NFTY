@@ -50,7 +50,7 @@ class Patients extends React.Component {
   render() {
     
 
-    console.log(sessionStorage.getItem('UserId'))
+    console.log(sessionStorage.getItem('UserName'))
     return (
       <Router path="/patients">
 
@@ -71,9 +71,9 @@ class Patients extends React.Component {
               variant="contained"
               size="large"
               color="primary"
-              style={{ margin: '15px 15px 15px 100px', height: '70px', width: '400px', fontSize: '30px' }}
-            >Create Token
-      </Button>
+              style={{ fontFamily: 'Patrick Hand SC', margin: '20px 20px 20px 145px', height: '70px', width: '500px', fontSize: '30px' }}>
+                Create Token
+            </Button>
 
           </Link>
 
@@ -81,26 +81,13 @@ class Patients extends React.Component {
           <Link to="/buy">
             <Button
               type="submit"
-              className={"MuiButton-Full"}
+              className={"MuiBu tton-Full"}
               variant="contained"
               size="large"
               color="primary"
-              style={{ margin: '15px', height: '70px', width: '400px', fontSize: '30px' }}
+              align="left"
+              style={{ fontFamily: 'Patrick Hand SC', margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
             >Buy Token
-      </Button>
-          </Link>
-
-
-
-          <Link to="/transfer">
-            <Button
-              type="submit"
-              className={"MuiButton-Full"}
-              variant="contained"
-              size="large"
-              color="primary"
-              style={{ margin: '15px', height: '70px', width: '400px', fontSize: '30px' }}
-            >Transfer Token
       </Button>
           </Link>
 
@@ -111,7 +98,7 @@ class Patients extends React.Component {
               variant="contained"
               size="large"
               color="primary"
-              style={{ margin: '15px', height: '70px', width: '400px', fontSize: '30px' }}
+              style={{fontFamily: 'Patrick Hand SC', margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
             >My Items
             </Button>
           </Link>

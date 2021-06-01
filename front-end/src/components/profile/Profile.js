@@ -19,79 +19,110 @@ const styles = (theme) => ({
   },
 });
 
-class Patients extends React.Component {
+class Profile extends React.Component {
 
   render() {
 
+
     return (
+      <div class="card" style={{margin: '100px 15px 160px 750px', alignSelf: 'center'}}>
+          <div class="card-image">
+              {/* <img src={'http://localhost:3001/img/' + val.userid} alt="hey" id="img" onClick={() => handleEvent(1, val.userid)}> */}
+              {/* </img> */}
+          </div>
+          <div >
+            <div class="card-text" >
+                <span class="date" >Name : </span>
+                {/* <h2>Owner : {val.user_name}</h2>
+                <h2>Price : {val.price} eth</h2> */}
+            </div>
+            <div class="card-text">
+              <span class="date">User Name : </span>
+              {/* <h2>Owner : {val.user_name}</h2>
+              <h2>Price : {val.price} eth</h2> */}
+            </div>
+            <div class="card-text">
+                <span class="date">Email : </span>
+                {/* <h2>Owner : {val.user_name}</h2>
+                <h2>Price : {val.price} eth</h2> */}
+            </div>
+          </div>
+          
 
-      // <div>
-
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justify="center"
-        style={{ minHeight: '100vh' }}
-      >
-
-        <Grid item xs={3}>
-
-          <a href="/">
-            <Button
-              type="submit"
-              className={"MuiButton-Full"}
-              variant="contained"
-              size="large"
-              color="primary"
-              style={{ margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
-            >Create Token
-          </Button>
-          </a>
+      </div>
+  )
 
 
-          <a href="/buy">
-            <Button
-              type="submit"
-              className={"MuiButton-Full"}
-              variant="contained"
-              size="large"
-              color="primary"
-              style={{ margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
-            >Buy Token
-          </Button>
-          </a>
 
-          <a href="/transfer">
-            <Button
-              type="submit"
-              className={"MuiButton-Full"}
-              variant="contained"
-              size="large"
-              color="primary"
-              style={{ margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
-            >Transfer Token
-          </Button>
-          </a>
+    // return (
 
-          <a href="/items">
-            <Button
-              type="submit"
-              className={"MuiButton-Full"}
-              variant="contained"
-              size="large"
-              color="primary"
-              style={{ margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
-            >My Items
-          </Button>
-          </a>
+    //   // <div>
 
-        </Grid>
+    //   <Grid
+    //     container
+    //     spacing={0}
+    //     direction="column"
+    //     alignItems="center"
+    //     justify="center"
+    //     style={{ minHeight: '100vh' }}
+    //   >
 
-      </Grid>
-      // </div>
-    );
+    //     <Grid item xs={3}>
+
+    //       <a href="/">
+    //         <Button
+    //           type="submit"
+    //           className={"MuiButton-Full"}
+    //           variant="contained"
+    //           size="large"
+    //           color="primary"
+    //           style={{ margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
+    //         >Create Token
+    //       </Button>
+    //       </a>
+
+
+    //       <a href="/buy">
+    //         <Button
+    //           type="submit"
+    //           className={"MuiButton-Full"}
+    //           variant="contained"
+    //           size="large"
+    //           color="primary"
+    //           style={{ margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
+    //         >Buy Token
+    //       </Button>
+    //       </a>
+
+    //       <a href="/transfer">
+    //         <Button
+    //           type="submit"
+    //           className={"MuiButton-Full"}
+    //           variant="contained"
+    //           size="large"
+    //           color="primary"
+    //           style={{ margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
+    //         >Transfer Token
+    //       </Button>
+    //       </a>
+
+    //       <a href="/items">
+    //         <Button
+    //           type="submit"
+    //           className={"MuiButton-Full"}
+    //           variant="contained"
+    //           size="large"
+    //           color="primary"
+    //           style={{ margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
+    //         >My Items
+    //       </Button>
+    //       </a>
+
+    //     </Grid>
+
+    //   </Grid>
+    //   // </div>
+    // );
   }
 }
-export default withStyles(styles, { withTheme: true })(Patients);
+export default Profile;

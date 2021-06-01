@@ -22,6 +22,7 @@ import PatientChangePassword from "../login/PatientChangePassword";
 import NavBar from "../navBar/NavBar";
 import PatientData from "../patient/PatientData";
 import Patients from "../patients/Patients";
+import Profile from "../profile/Profile";
 import SnackBar from "../snackBar/SnackBar";
 import "./App.css";
 
@@ -121,6 +122,10 @@ export default function App() {
                 <LoginDoctor {...props} setLogin={login} />
               )
             }
+          />
+          <Route
+            path="/profile"
+            render={(props) => <WithAuth Component={Profile} {...props} />}
           />
           <Route
             path="/enroll"

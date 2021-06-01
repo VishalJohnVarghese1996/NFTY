@@ -45,7 +45,7 @@ function ItemsPage() {
     };
 
     useEffect(() => {
-        Axios.get(`http://localhost:3001/api/buy${sessionStorage.getItem("UserId")}`).then((response) => {
+        Axios.get(`http://localhost:3001/api/buy${sessionStorage.getItem("UserName")}`).then((response) => {
             setReviewList(response.data);
         })
     }, [])
