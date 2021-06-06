@@ -71,7 +71,7 @@ class Patients extends React.Component {
               variant="contained"
               size="large"
               color="primary"
-              style={{ margin: '15px 15px 15px 100px', height: '70px', width: '400px', fontSize: '30px' }}
+              style={{ fontFamily: 'Patrick Hand SC', margin: '20px 20px 20px 145px', height: '70px', width: '500px', fontSize: '30px' }}>
             >Create Token
       </Button>
 
@@ -85,24 +85,13 @@ class Patients extends React.Component {
               variant="contained"
               size="large"
               color="primary"
-              style={{ margin: '15px', height: '70px', width: '400px', fontSize: '30px' }}
+              style={{ fontFamily: 'Patrick Hand SC', margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
             >Buy Token
       </Button>
           </Link>
 
 
 
-          <Link to="/transfer">
-            <Button
-              type="submit"
-              className={"MuiButton-Full"}
-              variant="contained"
-              size="large"
-              color="primary"
-              style={{ margin: '15px', height: '70px', width: '400px', fontSize: '30px' }}
-            >Transfer Token
-      </Button>
-          </Link>
 
           <Link to="/items">
             <Button
@@ -111,7 +100,7 @@ class Patients extends React.Component {
               variant="contained"
               size="large"
               color="primary"
-              style={{ margin: '15px', height: '70px', width: '400px', fontSize: '30px' }}
+              style={{fontFamily: 'Patrick Hand SC', margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
             >My Items
             </Button>
           </Link>
