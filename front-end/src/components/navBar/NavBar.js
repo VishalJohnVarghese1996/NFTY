@@ -49,17 +49,17 @@ function NavBar(props) {
             noWrap
             className={classes.toolbarTitle}
           >
-            Hospital 1
+            NFTY
           </Typography>
           <nav>
             {props.loggedIn ? (
               <Link
                 variant="button"
                 color="textPrimary"
-                href="/patients"
+                href="/patients "
                 className={classes.link}
               >
-                Patients
+                Home
               </Link>
             ) : (
               <Link
@@ -68,7 +68,7 @@ function NavBar(props) {
                 href="/"
                 className={classes.link}
               >
-                EHRecords
+                Home
               </Link>
             )}
             <Link
@@ -91,15 +91,50 @@ function NavBar(props) {
               Logout
             </Button>
           ) : (
-            <Button
-              onClick={() => setDisplayPopup(true)}
-              color="primary"
-              variant="outlined"
-              className={classes.link}
-            >
-              Login
+            <a href="/login/admin">
+              <Button
+                color="primary"
+                variant="outlined"
+                className={classes.link}
+              >
+                Login
             </Button>
+            </a>
+
           )}
+
+          {props.loggedIn ? (
+            null
+          ) : (
+            <a href="/enroll">
+              <Button
+                color="primary"
+                variant="outlined"
+                className={classes.link}
+              >
+                SignUp
+            </Button>
+            </a>
+
+          )}
+
+          {props.loggedIn ? (
+            <a href="/profile">
+              <Button
+                color="primary"
+                variant="outlined"
+                className={classes.link}
+              >
+                Profile
+            </Button>
+            </a>
+          ) : (
+            null
+
+          )}
+
+
+
         </Toolbar>
       </AppBar>
     </div>

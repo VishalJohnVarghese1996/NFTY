@@ -62,7 +62,8 @@ export default function AddDoctorForm(props) {
         addDoctor(res.data.newDoctor);
       })
       .catch((error) => {
-        openSnackBar({ message: error.response.data.message, type: "error" });
+        // openSnackBar({ message: error.response.data.message, type: "error" });
+        openSnackBar({ message: "Authentication Error", type: "error" });
       });
   };
 

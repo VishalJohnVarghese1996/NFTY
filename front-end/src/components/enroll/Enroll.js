@@ -21,7 +21,8 @@ export default function Enroll(props) {
   const [username, setUsername] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirmation, setNewPasswordConfirmation] = useState("");
-  const [userid, setUserid] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
   const classes = useStyles();
 
@@ -44,15 +45,16 @@ export default function Enroll(props) {
       console.log("44", newPassword);
       axios
         .post(`http://localhost:3001/register`, {
-          userid,
           username,
+          name,
+          email,
           newPassword,
         })
         .then((res) => {
           console.log(res);
-          if (res.status === 200) {
-            openSnackBar({ message: res.data.message, type: "success" });
-            props.history.push("/login");
+          if (res.status == 200) {
+            openSnackBar({ message: "User Registration Successful", type: "success" });
+            props.history.push("/login/Admin");
             return;
           } else {
             openSnackBar({ message: "Authentication Error", type: "error" });
@@ -60,7 +62,7 @@ export default function Enroll(props) {
         })
         .catch((error) => {
           console.log(error);
-          openSnackBar({ message: error.response.data.message, type: "error" });
+          openSnackBar({ message: "errorss", type: "error" });
         });
     }
   };
@@ -83,7 +85,18 @@ export default function Enroll(props) {
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth required>
-                <InputLabel htmlFor="username-input">User Name</InputLabel>
+                <InputLabel htmlFor="name-input">Full Name</InputLabel>
+                <Input
+                  id="name-input"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth required>
+                <InputLabel htmlFor="username-input">Select a User Name</InputLabel>
                 <Input
                   id="username-input"
                   value={username}
@@ -94,11 +107,11 @@ export default function Enroll(props) {
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth required>
-                <InputLabel htmlFor="username-input">User Id</InputLabel>
+                <InputLabel htmlFor="email-input">Email</InputLabel>
                 <Input
-                  id="userid-input"
-                  value={userid}
-                  onChange={(e) => setUserid(e.target.value)}
+                  id="email-input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </FormControl>
@@ -137,13 +150,13 @@ export default function Enroll(props) {
                 size="large"
                 color="primary"
               >
-                Enroll
+                Register
               </Button>
             </Grid>
             <Grid item xs={12}>
               <Button
                 className={"MuiButton-Full"}
-                href="/login/"
+                href="/login/admin"
                 size="large"
                 color="primary"
               >

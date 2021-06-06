@@ -1,27 +1,98 @@
 const express = require("express");
 const mysql = require("mysql");
+const bodyparser = require('body-parser')
 const cors = require("cors");
 const app = express();
+const FileType = require('file-type');
+const fileUpload = require('express-fileupload');
+const Web3 = require('web3');
+const fs = require('fs');
 
 app.use(express.json());
 app.use(cors());
+app.use(bodyparser.urlencoded({ extended: true }));
+app.use(fileUpload());
 
-const db = mysql.createConnection({
+
+
+app.post("/api/createTokenImage:UserId", async (req, res) => {
+
+
+
+
+
+  // const {name, data} = req.body.image;
+  // const title = req.body.title;
+  // const price = req.body.price;
+  // const copiesCount = req.body.copiesCount;
+  // const royalties = req.body.royalties;
+  // const user_name = req.params.UserId;
+  // const description = req.body.description;
+  // // const { name, data } = req.files.pic;
+  // var date = Date().toLocaleString();
+
+  // console.log(req.files);
+
+
+  // fs.readFile(req.files.file.path, function(err, data){
+  //   // Do something with the data (which holds the file information)
+  //   console.log(data)
+  // });
+  
+
+  console.log(req.files.file.data)
+  console.log(req.body.name)
+
+
+
+
+  // const sqlgetMaxImgId = "SELECT image_id FROM nft_db.image_data order by image_id desc limit 1;"
+
+  // var maxImageID = 0;
+
+  // db.query(sqlgetMaxImgId, (err, result) => {
+  //   result = Object.values(JSON.parse(JSON.stringify(result)));
+  //   maxImageID = result[0].image_id;
+  //   console.log(err)
+  // })
+
+  // const sqlInsert = "INSERT INTO image_data (image_id, user_name, image, price, royalties, date, title, copies) VALUES (?,?,?,?,?,?,?,?);"
+
+  // db.query(sqlInsert, [maxImageID, user_name, data, price, royalties, date, title, copiesCount], (err, result) => {
+  //   console.log(err);
+  // })
+});
+
+
+const db = mysql.createPool({
   user: "root",
   host: "localhost",
   password: "password",
-  database: "EHR_database",
+  database: "nft_db",
 });
 
+const options = {
+  client: 'mysql',
+  connection: {
+    host: 'localhost',
+    user: 'root',
+    password: 'password',
+    database: 'nft_db'
+  }
+}
+
+const knex = require('knex')(options);
+
 app.post("/register", (req, res) => {
-  const userid = req.body.userid;
+  const email = req.body.email;
+  const name = req.body.name;
   const username = req.body.username;
   let password = req.body.newPassword;
   const crypto = require("crypto");
-  password = crypto.createHmac("sha256", userid).update(password).digest("hex");
+  password = crypto.createHmac("sha256", username).update(password).digest("hex");
   db.query(
-    "INSERT INTO users (Userid, Username, Password) VALUES (?,?,?)",
-    [userid, username, password],
+    "INSERT INTO user_data (user_name, password, name, email_id ) VALUES (?,?,?,?)",
+    [username, password, name, email],
     (err, result) => {
       console.log(err);
     }
@@ -34,7 +105,7 @@ app.post("/loginAdmin", (req, res) => {
   const crypto = require("crypto");
   password = crypto.createHmac("sha256", userid).update(password).digest("hex");
   db.query(
-    "SELECT* FROM users where Userid=? AND Password=?",
+    "SELECT * FROM user_data where user_name=? AND password=?",
     [userid, password],
     (err, result) => {
       if (err) {
@@ -52,9 +123,9 @@ app.post("/loginAdmin", (req, res) => {
 
 app.post("/loginPatient", (req, res) => {
   const userid = req.body.userid;
-  let password = req.body.password;
+  const password = req.body.password;
   const crypto = require("crypto");
-  password = crypto.createHmac("sha256", userid).update(password).digest("hex");
+  // password = crypto.createHmac("sha256", userid).update(password).digest("hex");
   db.query(
     "SELECT* FROM patients where PID=? AND Password=?",
     [userid, password],
@@ -145,7 +216,7 @@ app.post("/loginDoctor", (req, res) => {
   const userid = req.body.userid;
   let password = req.body.password;
   const crypto = require("crypto");
-  password = crypto.createHmac("sha256", userid).update(password).digest("hex");
+  // password = crypto.createHmac("sha256", userid).update(password).digest("hex");
   db.query(
     "SELECT* FROM doctors where DID=? AND Password=?",
     [userid, password],
@@ -209,251 +280,85 @@ app.get("/patients", (req, res) => {
   });
 });
 
-app.get("/doctors", (req, res) => {
-  db.query("SELECT* FROM doctors", (err, result) => {
-    if (err) {
-      res.send({ err: err });
-    } else {
-      if (result) {
-        res.send(result);
-      } else {
-        res.send({ message: "Can not retrieve the data right now" });
-      }
-    }
+
+
+
+
+
+app.get("/api/buy:UserId", (req, res) => {
+
+  const UserId = req.params.UserId;
+
+  const sqlBuy = "SELECT * FROM image_data where user_name <> ?;"
+
+  db.query(sqlBuy, [UserId], (err, result) => {
+    // console.log(result);
+
+    res.send(result);
+
+    // console.log(result[0].image.length);
   });
+
+
 });
 
-app.post("/patient/add", async (req, res) => {
-  var eccryptoJS = require("eccrypto-js");
-  const pid = req.body.pid;
-  const age = req.body.age;
-  const first = req.body.firstName;
-  const last = req.body.lastName;
-  const address = req.body.address;
-  let password = req.body.password;
+app.get("/api/oneItem:UserImage", (req, res) => {
 
-  const crypto = require("crypto");
-  password = crypto.createHmac("sha256", pid).update(password).digest("hex");
-  let pbkdf2 = require("pbkdf2");
-  let symmetricKey = pbkdf2.pbkdf2Sync(password, "salt", 1, 32, "sha256");
+  const UserImage = req.params.UserImage;
+  const sqlGetItem = "SELECT * FROM image_data where image_id = ?;"
 
-  const keyPair = eccryptoJS.generateKeyPair();
+  db.query(sqlGetItem, [UserImage], (err, result) => {
+    // console.log(result);
 
-  const str = "test message to encrypt";
-  var privKey = keyPair.privateKey;
-  var pubKey = keyPair.publicKey.toString("hex");
+    res.send(result);
 
-  privKey = privKey.toString("hex");
-  let aes256 = require("aes256");
-  symmetricKey = symmetricKey.toString("hex");
-  var encryptedPrivKey = aes256.encrypt(symmetricKey, privKey);
-  db.query(
-    "INSERT INTO patients (PID, FirstName, LastName, Address, Age, Password, privateEncrypt, publicKey) VALUES(?,?,?,?,?,?,?,?)",
-    [pid, first, last, address, age, password, encryptedPrivKey, pubKey],
-    (err, result) => {
-      console.log(err);
-    }
-  );
-});
-
-app.post("/patient/updateEHR", async (req, res) => {
-  var eccryptoJS = require("eccrypto-js");
-  const pid = req.body.PID;
-  let EHR = req.body.EHR;
-  let pubKey;
-  db.query(
-    "SELECT publicKey FROM patients WHERE PID=?",
-    [pid],
-    async (err, result) => {
-      if (result) {
-        pubKey = result[0].publicKey;
-        pubKey = Buffer.from(pubKey, "hex");
-        const encrypted = await eccryptoJS.encrypt(
-          pubKey,
-          eccryptoJS.utf8ToBuffer(EHR)
-        );
-        db.query(
-          "UPDATE patients SET EHR=?, iv=?, mac=?, ephemPubKey=?  WHERE PID=?",
-          [
-            encrypted.ciphertext.toString("hex"),
-            encrypted.iv.toString("hex"),
-            encrypted.mac.toString("hex"),
-            encrypted.ephemPublicKey.toString("hex"),
-            pid,
-          ],
-          (err, result) => {
-            console.log(err);
-          }
-        );
-      }
-    }
-  );
-});
-
-app.post("/doctor/add", (req, res) => {
-  const did = req.body.did;
-  const first = req.body.firstName;
-  const last = req.body.lastName;
-  const address = req.body.address;
-  let password = req.body.password;
-  const specialization = req.body.specialization;
-  const crypto = require("crypto");
-  password = crypto.createHmac("sha256", did).update(password).digest("hex");
-  db.query(
-    "INSERT INTO doctors (DID, FirstName, LastName, Address, Specialization, Password) VALUES(?,?,?,?,?,?)",
-    [did, first, last, address, specialization, password],
-    (err, result) => {
-      console.log(err);
-    }
-  );
-});
-
-app.post("/relatedDoctor/remove", (req, res) => {
-  const pid = req.body.PID;
-  const did = req.body.DID;
-  db.query(
-    "DELETE FROM relateddidtopid WHERE DID=?  AND PID=?",
-    [did, pid],
-    (err, result) => {
-      console.log(err);
-    }
-  );
-});
-
-app.post("/patient/remove", (req, res) => {
-  const pid = req.body.pid;
-  db.query("DELETE FROM patients WHERE PID=?", [pid], (err, result) => {
-    console.log(err);
+    // console.log(result[0].image.length);
   });
+
+
 });
 
-app.post("/doctor/remove", (req, res) => {
-  const did = req.body.DID;
-  db.query("DELETE FROM doctors WHERE DID=?", [did], (err, result) => {
-    console.log(err);
+
+app.get("/api/get:UserId", (req, res) => {
+
+  const UserId = req.params.UserId;
+  // console.log(UserId)
+
+  const sqlGet = "SELECT * FROM image_data where user_name=?;"
+
+  db.query(sqlGet, [UserId], (err, result) => {
+    // console.log(result);
+
+    res.send(result);
+
+    // console.log(result[0].image.length);
   });
+
+
 });
 
-app.post("/relatedDoctor/add", (req, res) => {
-  const pid = req.body.PID;
-  const did = req.body.DID;
-  let EHR = req.body.EHR;
-  const crypto = require("crypto");
-  var sharedSecret = crypto.randomBytes(32); // 128-bits === 16-bytes
-  var textSecret = sharedSecret.toString("base64");
-  let aes256 = require("aes256");
-  var encryptedEHR = aes256.encrypt(textSecret, EHR === "" ? "_" : EHR);
-  db.query(
-    "INSERT INTO relateddidtopid values(?,?,?,?,NOW())",
-    [did, pid, encryptedEHR, textSecret],
-    (err, result) => {
-      console.log(err);
-    }
-  );
+
+
+
+app.get("/img/:id", async (req, res) => {
+
+  const id = req.params.id;
+  const img = await knex('image_data').where({ image_id: id }).first();
+
+
+  if (img) {
+    const contentType = await FileType.fromBuffer(img.image); // get the mimetype of the buffer (in this case its gonna be jpg but can be png or w/e)
+    res.type(contentType.mime); // not always needed most modern browsers including chrome will understand it is an img without this
+    res.send(img.image);
+  } else {
+    res.end('No Img with that Id!');
+  }
+
+  // console.log(img.image);
+
 });
 
-app.get("/patient/:PID", async (req, res) => {
-  const path = req.url;
-  const pid = path.slice(path.lastIndexOf("/")).slice(1);
-  var eccryptoJS = require("eccrypto-js");
-  db.query("SELECT * from patients WHERE PID=?", [pid], async (err, result) => {
-    if (err) {
-      res.send({ err: err });
-    } else if (result) {
-      const password = result[0].Password;
-      let pbkdf2 = require("pbkdf2");
-      let symmetricKey = pbkdf2.pbkdf2Sync(password, "salt", 1, 32, "sha256");
-      symmetricKey = symmetricKey.toString("hex");
-      let aes256 = require("aes256");
-      var decryptedPrivKey = aes256.decrypt(
-        symmetricKey,
-        result[0].privateEncrypt
-      );
 
-      if (result[0].iv !== null) {
-        const encrypted = {
-          iv: Buffer.from(result[0].iv, "hex"),
-          ephemPublicKey: Buffer.from(result[0].ephemPubKey, "hex"),
-          ciphertext: Buffer.from(result[0].EHR, "hex"),
-          mac: Buffer.from(result[0].mac, "hex"),
-        };
-        const decrypted = await eccryptoJS.decrypt(
-          Buffer.from(decryptedPrivKey, "hex"),
-          encrypted
-        );
-        result[0].EHR = decrypted.toString("utf8");
-      } else {
-        result[0].EHR = "";
-      }
-      res.send(result);
-    }
-  });
-});
-
-app.get("/doctor/:DID", (req, res) => {
-  const path = req.url;
-  const did = path.slice(path.lastIndexOf("/")).slice(1);
-  db.query("SELECT * from doctors WHERE DID=?", [did], (err, result) => {
-    if (err) {
-      res.send({ err: err });
-    } else if (result) {
-      res.send(result);
-    }
-  });
-});
-
-app.get("/doctorRelatedToPatient/:DID", (req, res) => {
-  const path = req.url;
-  const did = path.slice(path.lastIndexOf("/")).slice(1);
-  db.query(
-    "SELECT PID from relateddidtopid WHERE DID=?",
-    [did],
-    (err, result) => {
-      if (err) {
-        res.send({ err: err });
-      } else if (result) {
-        res.send(result);
-      }
-    }
-  );
-});
-
-app.get("/getEHRRelated/:DID/:PID", (req, res) => {
-  const path = req.url;
-  const pid = path.slice(path.lastIndexOf("/")).slice(1);
-  const temp = path.slice(0, path.lastIndexOf("/"));
-  const did = temp.slice(temp.lastIndexOf("/")).slice(1);
-  let aes256 = require("aes256");
-  db.query(
-    "SELECT EncryptedEHR, symm_key from relatedDidToPid WHERE DID=? AND PID=?",
-    [did, pid],
-    (err, result) => {
-      if (err) {
-        res.send({ err: err });
-      } else if (result) {
-        var EHR = aes256.decrypt(result[0].symm_key, result[0].EncryptedEHR);
-        result[0].EncryptedEHR = EHR;
-        res.send(result);
-      }
-    }
-  );
-});
-
-app.get("/patientRelatedToDoctor/:PID", (req, res) => {
-  const path = req.url;
-  const pid = path.slice(path.lastIndexOf("/")).slice(1);
-  db.query(
-    "SELECT DID from relateddidtopid WHERE PID=?",
-    [pid],
-    (err, result) => {
-      if (err) {
-        res.send({ err: err });
-      } else if (result) {
-        res.send(result);
-      }
-    }
-  );
-});
 
 app.listen(3001, () => {
   console.log("running server");

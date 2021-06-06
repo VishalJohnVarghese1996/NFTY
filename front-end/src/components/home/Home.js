@@ -12,7 +12,7 @@ export default function Home() {
         color="textPrimary"
         gutterBottom
       >
-        EHRecords
+        NFTY
       </Typography>
       <Typography
         variant="h5"
@@ -20,8 +20,7 @@ export default function Home() {
         color="textSecondary"
         component="p"
       >
-        Using Hyperledger to store patients' sensitive data securely and provide
-        a hassle free transfer of data
+        Using Ethereum for copyright protection and provide a marketplace for trading crypto art.
       </Typography>
     </Container>
   );

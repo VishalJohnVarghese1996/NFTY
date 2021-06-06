@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login(props) {
+export default function Login(props) {  
   const [userid, setUserid] = useState("");
   const [password, setPassword] = useState("");
   const classes = useStyles();
@@ -36,6 +36,8 @@ export default function Login(props) {
         ) {
           const token = res.data.token;
           props.setLogin(token);
+          sessionStorage.setItem('UserId', userid);
+          console.log(userid);
           props.history.push("/patients");
           return;
         } else {

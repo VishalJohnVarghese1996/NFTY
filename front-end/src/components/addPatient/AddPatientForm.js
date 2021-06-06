@@ -62,7 +62,8 @@ export default function AddPatientForm(props) {
         addPatient(res.data.newPatient);
       })
       .catch((error) => {
-        openSnackBar({ message: error.response.data.message, type: "error" });
+        // openSnackBar({ message: error.response.data.message, type: "error" });
+        openSnackBar({ message: "Authentication Error", type: "error" });
       });
   };
 

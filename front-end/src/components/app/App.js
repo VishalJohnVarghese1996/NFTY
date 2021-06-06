@@ -22,6 +22,7 @@ import PatientChangePassword from "../login/PatientChangePassword";
 import NavBar from "../navBar/NavBar";
 import PatientData from "../patient/PatientData";
 import Patients from "../patients/Patients";
+import Profile from "../profile/Profile";
 import SnackBar from "../snackBar/SnackBar";
 import "./App.css";
 
@@ -122,6 +123,10 @@ export default function App() {
               )
             }
           />
+          {/* <Route
+            path="/profile"
+            render={(props) => <WithAuth Component={Profile} {...props} />}
+          /> */}
           <Route
             path="/enroll"
             render={(props) =>
@@ -132,14 +137,14 @@ export default function App() {
             path="/patients"
             render={(props) => <WithAuth Component={Patients} {...props} />}
           />
-          <Route
+          {/* <Route
             path="/patient/:PID"
             render={(props) => <WithAuth Component={PatientData} {...props} />}
-          />
-          <Route
+          /> */}
+          {/* <Route
             path="/doctor/:DID"
             render={(props) => <WithAuth Component={DoctorData} {...props} />}
-          />
+          /> */}
           <Route
             path="/patientChangePassword"
             component={PatientChangePassword}
