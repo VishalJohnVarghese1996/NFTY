@@ -1,18 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
+import TransferItem from './TransferItem'
+
+import Web3 from 'web3'
+import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from '../../config'
+
+const web3 = new Web3(Web3.givenProvider);
+const NftContract = new web3.eth.Contract(TODO_LIST_ABI, TODO_LIST_ADDRESS);
 
 const Homepage = () => {
 
 	const [movieReviewList, setReviewList] = useState([])
+	const [tokenUri, setTokenUri] = useState("");
 
-	useEffect(() => {
+	useEffect(async () => {
+
+		const accounts = await window.ethereum.enable();
+		const account = accounts[0];
+		const gas = 7000000;
+	
+	
+		const result = await NftContract.methods
+		.tokenURI(1)
+		.call({ from: account, gas });
+
+		setTokenUri(result);
+
+
 
 		Axios.get(`http://localhost:3001/api/oneItem${sessionStorage.getItem("userImage")}`).then((response) => {
 			setReviewList(response.data);
 		})
 	}, [])
 
+	const [value, setValue] = useState(null)
+    const [componentToRender, setComponentToRender] = useState(null)
 
+
+	const handleEvent = (button, imagVal) => {
+        setValue(button);
+        setComponentToRender(value);
+        sessionStorage.setItem('userImage', imagVal);
+    };
+
+
+	
+    const renderComponent = () => {
+        switch (componentToRender) {
+            case 1:
+                return <TransferItem />
+            default://replaced 'else' with 'default'
+                
 	return (
 		<div>
 			{movieReviewList.map((val) => {
@@ -20,8 +58,9 @@ const Homepage = () => {
 				return (
 
 					<div>
+						
 						<div id='parent_div_1'>
-							<img src={'http://localhost:3001/img/' + val.image_id} alt="hey" id="imgItem"></img>
+							<img src={'http://localhost:3001/imgMy/' + val.image_id} alt="hey" id="imgItem"></img>
 						</div>
 
 						<div id='parent_div_2'>
@@ -42,7 +81,7 @@ const Homepage = () => {
 								and more recently with desktop publishing software like Aldus PageMaker
 							including versions of Lorem Ipsum.</p>
 							</div>
-
+							
 							<hr></hr>
 
 							<p><u>Owner Chain</u></p>
@@ -53,9 +92,9 @@ const Homepage = () => {
 								Ashutosh&nbsp; &nbsp; &nbsp;<a href="https://etherscan.io/tx/0x454d70395bd6898c33f6a34eac4b17a4a5d30d46355144711d2b784d70bff1e1">Transaction id</a>
 							</p>
 							<hr></hr>
-							<button class="transferbtn">Transfer</button>
+							<button class="transferbtn" onClick={() => handleEvent(1, val.image_id)}>Transfer</button>
 
-
+							{alert(tokenUri)}
 						</div>
 
 
@@ -67,7 +106,26 @@ const Homepage = () => {
 			})}
 
 		</div>
-	)
+	);
+        }
+    }
+
+    return (
+
+        <div>
+            {renderComponent()}
+        </div>
+
+    )	
+
+
+
+
+
+
+
+
+
 };
 
 

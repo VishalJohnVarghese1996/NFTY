@@ -21,7 +21,7 @@ const Homepage = () => {
 
 					<div>
 						<div id='parent_div_1'>
-							<img src={'http://localhost:3001/img/' + val.image_id} alt="hey" id="imgItem"></img>
+							<img src={'http://localhost:3001/imgBuy/' + val.image_id} alt="hey" id="imgItem"></img>
 						</div>
 
 						<div id='parent_div_2'>

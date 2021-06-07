@@ -7,6 +7,9 @@ const FileType = require('file-type');
 const fileUpload = require('express-fileupload');
 const Web3 = require('web3');
 const fs = require('fs');
+const sharp = require('sharp');
+
+var im = 
 
 app.use(express.json());
 app.use(cors());
@@ -18,49 +21,45 @@ app.use(fileUpload());
 app.post("/api/createTokenImage:UserId", async (req, res) => {
 
 
+  const title = req.body.title;
+  const price = req.body.price;
+  const copiesCount = req.body.copiesCount;
+  const royalties = req.body.royalties;
+  const user_name = req.params.UserId;
+  const description = req.body.description;
+  const data = req.files.file.data;
+  // var low_res;
 
+  var date = Date().toLocaleString();
 
+  const low_res = await sharp(data)
+  .metadata()
+  .then(({ width }) => sharp(data)
+    .resize(Math.round(width * 0.5))
+    .toBuffer()
+  );
 
-  // const {name, data} = req.body.image;
-  // const title = req.body.title;
-  // const price = req.body.price;
-  // const copiesCount = req.body.copiesCount;
-  // const royalties = req.body.royalties;
-  // const user_name = req.params.UserId;
-  // const description = req.body.description;
-  // // const { name, data } = req.files.pic;
-  // var date = Date().toLocaleString();
+    const sqlgetMaxImgId = "SELECT image_id FROM nft_db.image_data order by image_id desc limit 1;"
 
-  // console.log(req.files);
-
-
-  // fs.readFile(req.files.file.path, function(err, data){
-  //   // Do something with the data (which holds the file information)
-  //   console.log(data)
-  // });
+    var maxImageID = 0;
   
+    db.query(sqlgetMaxImgId, (err, result) => {
+      result = Object.values(JSON.parse(JSON.stringify(result)));
+      maxImageID = result[0].image_id;
+      console.log(err)
+    })
+  
+    const sqlInsert = "INSERT INTO image_data (image_id, user_name, image, low_res_image, price, royalties, date, title, copies) VALUES (?,?,?,?,?,?,?,?,?);"
+  
+    db.query(sqlInsert, [maxImageID, user_name, data, low_res, price, royalties, date, title, copiesCount], (err, result) => {
+      console.log(err);
+    })
 
-  console.log(req.files.file.data)
-  console.log(req.body.name)
 
 
 
-
-  // const sqlgetMaxImgId = "SELECT image_id FROM nft_db.image_data order by image_id desc limit 1;"
-
-  // var maxImageID = 0;
-
-  // db.query(sqlgetMaxImgId, (err, result) => {
-  //   result = Object.values(JSON.parse(JSON.stringify(result)));
-  //   maxImageID = result[0].image_id;
-  //   console.log(err)
   // })
 
-  // const sqlInsert = "INSERT INTO image_data (image_id, user_name, image, price, royalties, date, title, copies) VALUES (?,?,?,?,?,?,?,?);"
-
-  // db.query(sqlInsert, [maxImageID, user_name, data, price, royalties, date, title, copiesCount], (err, result) => {
-  //   console.log(err);
-  // })
 });
 
 
@@ -338,9 +337,26 @@ app.get("/api/get:UserId", (req, res) => {
 });
 
 
+app.get("/imgBuy/:id", async (req, res) => {
+
+  const id = req.params.id;
+  const img = await knex('image_data').where({ image_id: id }).first();
 
 
-app.get("/img/:id", async (req, res) => {
+  if (img) {
+    const contentType = await FileType.fromBuffer(img.low_res_image); // get the mimetype of the buffer (in this case its gonna be jpg but can be png or w/e)
+    res.type(contentType.mime); // not always needed most modern browsers including chrome will understand it is an img without this
+    res.send(img.low_res_image);
+  } else {
+    res.send('No Img with that Id!');
+  }
+
+  // console.log(img.image);
+
+});
+
+
+app.get("/imgMy/:id", async (req, res) => {
 
   const id = req.params.id;
   const img = await knex('image_data').where({ image_id: id }).first();
@@ -351,10 +367,8 @@ app.get("/img/:id", async (req, res) => {
     res.type(contentType.mime); // not always needed most modern browsers including chrome will understand it is an img without this
     res.send(img.image);
   } else {
-    res.end('No Img with that Id!');
+    res.send('No Img with that Id!');
   }
-
-  // console.log(img.image);
 
 });
 

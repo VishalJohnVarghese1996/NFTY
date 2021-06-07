@@ -22,6 +22,8 @@ import Typography from '@material-ui/core/Typography';
 import Header from './Token'
 import Homepage from './Homepage'
 
+import TransferItem from './TransferItem'
+
 
 const useStyles = makeStyles({
     root: {
@@ -51,10 +53,18 @@ function ItemsPage() {
         })
     }, [])
 
+
+    function transfer(){
+        var receiverAddress = prompt("Enter public address of reciver.");
+        
+    }
+
     const renderComponent = () => {
         switch (componentToRender) {
             case 1:
                 return <Homepage />;
+            case 2:
+                return <TransferItem />
             default://replaced 'else' with 'default'
                 return (<div>
                     <h1>Welcome to Basic Page</h1>
@@ -66,7 +76,7 @@ function ItemsPage() {
                         return (
                             <div class="card">
                                 <div class="card-image">
-                                    <img src={'http://localhost:3001/img/' + val.image_id} alt="hey" id="img" onClick={() => handleEvent(1, val.image_id)}>
+                                    <img src={'http://localhost:3001/imgMy/' + val.image_id} alt="hey" id="img" onClick={() => handleEvent(1, val.image_id)}>
                                     </img>
                                 </div>
                                 <div class="card-text">
@@ -75,7 +85,7 @@ function ItemsPage() {
                                     <h2>Price : {val.price} eth</h2>
                                 </div>
                                 <div class="card-stat">
-                                    <button class="transferbtn">TRANSFER</button>
+                                    <button class="transferbtn" onClick={() => handleEvent(2, val.image_id)}>TRANSFER</button>
                                 </div>
                             </div>
                         )

@@ -17,11 +17,11 @@ import { openSnackBar } from "../snackBar/SnackBar";
 
 import Web3 from 'web3'
 
-import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from './config'
+import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from '../../config'
 
 const web3 = new Web3(Web3.givenProvider);
 
-const HelloContract = new web3.eth.Contract(TODO_LIST_ABI, TODO_LIST_ADDRESS);
+const NftContract = new web3.eth.Contract(TODO_LIST_ABI, TODO_LIST_ADDRESS);
 
 
 const useStyles = makeStyles((theme) => ({
@@ -49,63 +49,6 @@ export default function CreatePage(props) {
 
   const classes = useStyles();
 
-  // const updateReview = (movie) => {
-  // Axios.put(`http://localhost:3001/api/update${sessionStorage.getItem("UserId")}`, {
-  // }).then(() => {
-  //   alert("Successful update");
-  // });
-  // }
-
-  const sendtoBlockchain = async (e) => {
-
-    e.preventDefault();
-
-    Axios
-      .post(`http://localhost:3001/api/createTokenImage${sessionStorage.getItem("UserId")}`, {
-        title,
-        description,
-        copiesCount,
-        royalties,
-        price,
-        image
-      })
-      .then(() => {
-        alert("Successful update");
-      });
-
-
-
-
-    // event.preventDefault();
-    // event. returnValue = false;
-    const accounts = await window.ethereum.enable();
-    const account = accounts[0];
-
-
-    // const gas = await HelloContract.methods.sendBal('0x9c9e37934CC8Dd832E8C2406324Dd04D5CdE715f').estimateGas();
-
-    const gas = 7000000;
-
-
-    // , value:web3.utils.toWei("0.5", "ether")
-
-    var baseURI = '{'
-      + '"title" : ' + title + ','
-      + '"description"  : ' + description + ','
-      + '"price" : ' + price + ','
-      + '"copiesCount" : ' + copiesCount + ','
-      + '"royalties" : ' + royalties
-      + '}';
-
-    // const result = await HelloContract.methods
-    //   .mintNft('0x9c9e37934CC8Dd832E8C2406324Dd04D5CdE715f', baseURI)
-    //   .send({ from: account, gas });
-
-    // console.log("hey")
-    // console.log(result);
-
-  };
-
   const { register, handleSubmit } = useForm()
 
   const onSubmit = async (data) => {
@@ -129,7 +72,7 @@ export default function CreatePage(props) {
       + '"royalties" : ' + royalties
       + '}';
 
-      const result = await HelloContract.methods
+      const result = await NftContract.methods
       .mintNft('0x9c9e37934CC8Dd832E8C2406324Dd04D5CdE715f', baseURI)
       .send({ from: account, gas });
 
@@ -138,25 +81,16 @@ export default function CreatePage(props) {
 
     const formData = new FormData();
     formData.append('file', data.pic[0]);
-    formData.append('name', 'ABC'); 
+    formData.append('title', title); 
+    formData.append('description', description); 
+    formData.append('price', price); 
+    formData.append('copiesCount', copiesCount); 
+    formData.append('royalties', royalties); 
+
 
     Axios.post(`http://localhost:3001/api/createTokenImage${sessionStorage.getItem("UserId")}`, formData).then(res => {
       //Now do what you want with the response;
     })
-
-    // Axios
-    //   .post(`http://localhost:3001/api/createTokenImage${sessionStorage.getItem("UserId")}`, {
-    //     title,
-    //     description,
-    //     copiesCount,
-    //     royalties,
-    //     price,
-    //     image
-    //   })
-    //   .then(() => {
-    //     alert("Successful update");
-    //   });
-
   }
 
   return (
