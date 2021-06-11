@@ -70,9 +70,8 @@ function ItemsPage() {
     
     
         const result = await NftContract.methods
-        .buyNft("0x64479dD3c90aB60bC3010BCB4b82942A109aBAd6", 2)
+        .buyNft("0x82c6F7c21DD6e9266EBc383cB3ba351595EE0b5D", 1)
         .send({ from: account, gas });
-    
       }
 
     const renderComponent = () => {

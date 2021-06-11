@@ -51,7 +51,9 @@ export default function CreatePage(props) {
 
   const { register, handleSubmit } = useForm()
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data, event) => {
+
+    event.preventDefault();
 
     const accounts = await window.ethereum.enable();
     const account = accounts[0];
@@ -73,7 +75,7 @@ export default function CreatePage(props) {
       + '}';
 
       const result = await NftContract.methods
-      .mintNft('0x9c9e37934CC8Dd832E8C2406324Dd04D5CdE715f', baseURI)
+      .mintNft(account.toString(16), baseURI)
       .send({ from: account, gas });
 
     setImage(data.pic[0]);
@@ -87,10 +89,11 @@ export default function CreatePage(props) {
     formData.append('copiesCount', copiesCount); 
     formData.append('royalties', royalties); 
 
-
     Axios.post(`http://localhost:3001/api/createTokenImage${sessionStorage.getItem("UserId")}`, formData).then(res => {
       //Now do what you want with the response;
     })
+
+    console.log("token created");
   }
 
   return (

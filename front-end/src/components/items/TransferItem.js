@@ -36,7 +36,7 @@ export default function TransferItem(props) {
 
 
     const result = await NftContract.methods
-    .transferToken(recieverAddress, 2)
+    .transferToken(recieverAddress, 1)
     .send({ from: account, gas });
 
     // Axios.post(`http://localhost:3001/api/createTokenImage${sessionStorage.getItem("UserId")}`, formData).then(res => {
@@ -44,7 +44,6 @@ export default function TransferItem(props) {
     // })
 
   }
-
 
 
   return (
