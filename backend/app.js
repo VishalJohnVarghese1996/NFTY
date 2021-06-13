@@ -5,8 +5,6 @@ const cors = require("cors");
 const app = express();
 const FileType = require('file-type');
 const fileUpload = require('express-fileupload');
-const Web3 = require('web3');
-const fs = require('fs');
 const sharp = require('sharp');
 
 var im =
@@ -93,16 +91,13 @@ app.post("/api/createTokenImage", async (req, res) => {
       console.log(err);
     })
 
-
     // insert into tx table
     const sqlInsertTx = "INSERT INTO tx_data (tx_hash, token_id, action) VALUES (?,?,?);"
 
     db.query(sqlInsertTx, [txHash, tokenArray[i], action], (err, result) => {
       console.log(err);
     })
-
   }
-
 });
 
 app.post("/loginAdmin", (req, res) => {
@@ -296,8 +291,6 @@ app.get("/api/buy:Address", (req, res) => {
   db.query(sqlBuy, [Address], (err, result) => {
     res.send(result);
   });
-
-
 });
 
 
@@ -329,7 +322,6 @@ app.post("/api/transferToken:userImage", (req, res) => {
   db.query(sqlInsertTx, [txHash, token_id, action], (err, result) => {
     console.log(err);
   })
-
 });
 
 
@@ -362,12 +354,9 @@ app.get("/api/oneItem:UserImage", (req, res) => {
   db.query(sqlGetItem, [UserImage], (err, result) => {
     res.send(result);
   });
-
-
 });
 
 app.get("/api/getCreator:creator", (req, res) => {
-
 
   const creatorAddress = req.params.creator;
   const sqlGetItemCreator = "SELECT * FROM user_data where public_address = ?;"
@@ -375,8 +364,6 @@ app.get("/api/getCreator:creator", (req, res) => {
   db.query(sqlGetItemCreator, [creatorAddress.toString()], (err, result) => {
     console.log(result[0].user_name);
   });
-
-
 });
 
 
@@ -390,31 +377,23 @@ app.get("/api/get:Address", (req, res) => {
   db.query(sqlGet, [address], (err, result) => {
     res.send(result);
   });
-
-
 });
 
 app.post("/api/getBuyDetails", (req, res) => {
 
   const token_id = req.body.token_id;
 
-
   const sqlGetDetails = "SELECT address, price FROM image_data where token_id = ?;"
 
   db.query(sqlGetDetails, [token_id], (err, result) => {
     res.send(result[0]);
   });
-
-
-
-
 });
 
 app.get("/imgBuy/:id", async (req, res) => {
 
   const id = req.params.id;
   const img = await knex('image_data').where({ token_id: id }).first();
-
 
   if (img) {
     const contentType = await FileType.fromBuffer(img.low_res_image); // get the mimetype of the buffer (in this case its gonna be jpg but can be png or w/e)
@@ -438,9 +417,7 @@ app.get("/imgMy/:id", async (req, res) => {
   } else {
     res.send('No Img with that Id!');
   }
-
 });
-
 
 app.listen(3001, () => {
   console.log("running server");

@@ -9,7 +9,6 @@ import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import React, { useState } from "react";
 import { openSnackBar } from "../snackBar/SnackBar";
-
 import { makeStyles } from "@material-ui/core";
 
 
@@ -39,8 +38,6 @@ const TransferPage = () => {
                     res.data.message !== "Wrong UserID/Password"
                 ) {
                     const token = res.data.token;
-                    // props.setLogin(token);
-                    // props.history.push("/patients");
                     return;
                 } else {
                     openSnackBar({ message: "Authentication Error", type: "error" });
@@ -128,6 +125,3 @@ const TransferPage = () => {
 };
 
 export default TransferPage;
-
-
-

@@ -1,17 +1,11 @@
-import { Container } from "@material-ui/core";
-import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from "@material-ui/styles";
-import axios from "axios";
 import React from "react";
 
 import Create from '../create/Create'
 import Buy from '../buy/Buy'
-import Transfer from '../transfer/Transfer'
 import Items from '../items/Items'
-import { useHistory } from 'react-router'
 
 import {
   BrowserRouter as Router,
@@ -70,7 +64,6 @@ class Patients extends React.Component {
 
   render() {
 
-    // console.log(sessionStorage.getItem('UserId'))
     return (
       <Router path="/patients">
 
@@ -151,9 +144,7 @@ class Patients extends React.Component {
 
 
     );
-
   }
-
 }
 
 export default withStyles(styles, { withTheme: true })(Patients);
