@@ -75,35 +75,39 @@ export default function CreatePage(props) {
       + '"royalties" : ' + royalties
       + '}';
 
-      const result = await NftContract.methods
+    const result = await NftContract.methods
       .mintNft(baseURI, copiesCount, price, royalties)
       .send({ from: account, gas });
 
-      console.log(result.transactionHash)
+
+    var tokenArray = new Array(result.events.Transfer.length);
+    var i;
 
 
-      var tokenArray = new Array(result.events.Transfer.length);
-      var i;
+    if (result.events.Transfer.length) {
       for (i = 0; i < result.events.Transfer.length; i++) {
-        console.log(result.events.Transfer[i].returnValues.tokenId);
         tokenArray[i] = result.events.Transfer[i].returnValues.tokenId;
       }
+    } else {
+      tokenArray[0] = result.events.Transfer.returnValues.tokenId;
+    }
+
 
 
     setImage(data.pic[0]);
 
     const formData = new FormData();
     formData.append('file', data.pic[0]);
-    formData.append('title', title); 
+    formData.append('title', title);
     // formData.append('description', description); 
-    formData.append('price', price); 
+    formData.append('price', price);
     // formData.append('copiesCount', copiesCount); 
     // formData.append('royalties', royalties); 
     formData.append('owner', account);
     formData.append('action', "minted");
-    formData.append('txHash',result.transactionHash);
+    formData.append('txHash', result.transactionHash);
     formData.append('tokenArray', JSON.stringify(tokenArray));
-  
+
 
     Axios.post("http://localhost:3001/api/createTokenImage", formData).then(res => {
       //Now do what you want with the response;
@@ -126,7 +130,7 @@ export default function CreatePage(props) {
                 gutterBottom
               >
                 Create and Mint NFT
-                        </Typography>
+              </Typography>
             </Grid>
 
             <Grid item xs={12}>
@@ -155,7 +159,7 @@ export default function CreatePage(props) {
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth required>
-                <InputLabel htmlFor="price-input">Price</InputLabel>
+                <InputLabel htmlFor="price-input">Price (ETH)</InputLabel>
                 <Input
                   id="price-input"
                   name="price"
@@ -182,7 +186,7 @@ export default function CreatePage(props) {
               <FormControl fullWidth required>
                 <InputLabel htmlFor="royalties-input">
                   Royalties(%)
-                          </InputLabel>
+                </InputLabel>
                 <Input
                   id="royalties-input"
                   // value={royalties}
@@ -200,20 +204,11 @@ export default function CreatePage(props) {
                 {...register('pic')}
                 type="file"
                 id="pic"
-                // name="pic"
+              // name="pic"
               // onChange={(e) => setImage(e.target.files[0])}
               // onChange={sayhey}
               />
 
-              {isSelected ? (
-                <div>
-                  <p>Filename: {selectedFile.name}</p>
-                  <p>Filetype: {selectedFile.type}</p>
-                  <p>Size in bytes: {selectedFile.size}</p>
-                </div>
-              ) : (
-                <p>Select a file to show details</p>
-              )}
               {/* </form> */}
             </Grid>
             <Grid item xs={12}>
@@ -226,7 +221,7 @@ export default function CreatePage(props) {
               // onClick={sendtoBlockchain}
               >
                 Create Token
-                        </Button>
+              </Button>
             </Grid>
           </Grid>
         </form>

@@ -87,6 +87,7 @@ app.post("/api/createTokenImage", async (req, res) => {
     // insert into image data table
     const sqlInsert = "INSERT INTO image_data (image, low_res_image, token_id, address, title, price, date) VALUES (?,?,?,?,?,?,?);"
 
+    console.log(tokenArray[i]);
     db.query(sqlInsert, [data, low_res, tokenArray[i], ownerAddress, title, price, date], (err, result) => {
       console.log(err);
     })
@@ -384,6 +385,20 @@ app.get("/api/getCreator:creator", (req, res) => {
   });
 });
 
+
+app.get("/api/getOwner:owner", (req, res) => {
+
+  const ownerAddress = req.params.owner;
+  const sqlGetItemOwner = "SELECT * FROM user_data where public_address = ?;"
+
+  db.query(sqlGetItemOwner, [ownerAddress.toString()], (err, result) => {
+    // console.log(result);
+
+    if(result[0]){
+      res.send(result[0].user_name);
+    }
+  });
+});
 
 
 app.get("/api/get:Address", (req, res) => {

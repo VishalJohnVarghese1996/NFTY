@@ -88,7 +88,9 @@ const Homepage = () => {
 
 											<p id="tokenName"><u>Name:  {tokenUri.split(',')[0].split(':')[1]}</u></p>
 											<p>Price : {tokenUri.split(',')[2].split(':')[1]}ETH</p>
-											<p>Creator : {creator}&nbsp;  &nbsp; &nbsp; &nbsp;<a href={"https://ropsten.etherscan.io/tx/" + txList[0].tx_hash}>Transaction id</a></p>
+											<p>Creator : {creator}&nbsp;  &nbsp; &nbsp; &nbsp;
+											<br/>
+											<a href={"https://ropsten.etherscan.io/tx/" + txList[0].tx_hash}>Transaction Link</a></p>
 											<p> Created on : {val.date} </p>
 											<p>{tokenUri.split(',')[4].split(':')[1].replace('}', '')}% of sales will go to creator</p>
 											<hr></hr>
@@ -97,13 +99,13 @@ const Homepage = () => {
 
 										<hr></hr>
 
-										<p><u>Owner Chain</u></p>
+										{/* <p><u>Owner Chain</u></p>
 										<p>Vishal&nbsp; &nbsp; &nbsp;<a href="https://etherscan.io/tx/0x454d70395bd6898c33f6a34eac4b17a4a5d30d46355144711d2b784d70bff1e1">Transaction id</a>
 											<br />
 											Amit&nbsp; &nbsp; &nbsp;<a href="https://etherscan.io/tx/0x454d70395bd6898c33f6a34eac4b17a4a5d30d46355144711d2b784d70bff1e1">Transaction id</a>
 											<br />
 											Ashutosh&nbsp; &nbsp; &nbsp;<a href="https://etherscan.io/tx/0x454d70395bd6898c33f6a34eac4b17a4a5d30d46355144711d2b784d70bff1e1">Transaction id</a>
-										</p>
+										</p> */}
 										<hr></hr>
 										<button class="transferbtn" onClick={() => handleEvent(1, val.token_id)}>Transfer</button>
 
