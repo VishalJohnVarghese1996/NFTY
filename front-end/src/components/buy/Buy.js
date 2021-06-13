@@ -85,8 +85,6 @@ function ItemsPage() {
                 return <Homepage />;
             default://replaced 'else' with 'default'
                 return (<div>
-                    <h1>Welcome to Items Page</h1>
-
 
                     {movieReviewList.map((val) => {
 

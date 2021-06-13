@@ -57,8 +57,6 @@ function ItemsPage() {
                 return <TransferItem />
             default://replaced 'else' with 'default'
                 return (<div>
-                    <h1>Welcome to Basic Page</h1>
-
                     {movieReviewList.map((val) => {
 
                         return (

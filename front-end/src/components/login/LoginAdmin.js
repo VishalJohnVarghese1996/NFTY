@@ -50,7 +50,7 @@ export default function Login(props) {
           props.setLogin(token);
           sessionStorage.setItem('Address', account);
           console.log(username);
-          props.history.push("/patients");
+          props.history.push("/firstPage");
           return;
         } else {
           openSnackBar({ message: "Authentication Error", type: "error" });
