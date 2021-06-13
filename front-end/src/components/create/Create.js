@@ -183,7 +183,7 @@ export default function CreatePage(props) {
             <Grid item xs={12}>
               <FormControl fullWidth required>
                 <InputLabel htmlFor="royalties-input">
-                  Royalties
+                  Royalties(%)
                           </InputLabel>
                 <Input
                   id="royalties-input"

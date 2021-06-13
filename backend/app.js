@@ -406,6 +406,20 @@ app.get("/api/oneItem:UserImage", (req, res) => {
 
 });
 
+app.get("/api/getTx:UserImage", (req, res) => {
+
+  const UserImage = req.params.UserImage;
+  const sqlGetItem = "SELECT tx_hash, action FROM tx_data where token_id = ?;"
+
+  db.query(sqlGetItem, [UserImage], (err, result) => {
+    res.send(result);
+
+    // console.log(result[0].tx_hash);
+  });
+
+});
+
+
 app.get("/api/getCreator:creator", (req, res) => {
 
 
@@ -415,11 +429,9 @@ app.get("/api/getCreator:creator", (req, res) => {
   db.query(sqlGetItemCreator, [creatorAddress.toString()], (err, result) => {
     // console.log(result);
 
-    // res.send(result);
-
-    console.log(result[0].user_name);
-
-    // console.log(result[0].image.length);
+    if(result[0]){
+      res.send(result[0].user_name);
+    }
   });
 
 
