@@ -119,21 +119,6 @@ function NavBar(props) {
 
           )}
 
-          {props.loggedIn ? (
-            <a href="/profile">
-              <Button
-                color="primary"
-                variant="outlined"
-                className={classes.link}
-              >
-                Profile
-            </Button>
-            </a>
-          ) : (
-            null
-
-          )}
-
 
 
         </Toolbar>
