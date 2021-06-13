@@ -16,7 +16,7 @@ import Footer from "../footer/Footer";
 import Home from "../home/Home";
 import LoginAdmin from "../login/LoginAdmin";
 import NavBar from "../navBar/NavBar";
-import Patients from "../patients/Patients";
+import FirstPage from "../firstPage/Firstpage";
 import SnackBar from "../snackBar/SnackBar";
 import "./App.css";
 
@@ -91,7 +91,7 @@ export default function App() {
             path="/login/admin"
             render={(props) =>
               loggedIn ? (
-                <Redirect to="/patient/:ID" />
+                <Redirect to="/firstPage/:ID" />
               ) : (
                 <LoginAdmin {...props} setLogin={login} />
               )
@@ -100,12 +100,12 @@ export default function App() {
           <Route
             path="/enroll"
             render={(props) =>
-              loggedIn ? <Redirect to="/patients" /> : <Enroll {...props} />
+              loggedIn ? <Redirect to="/firstPage" /> : <Enroll {...props} />
             }
           />
           <Route
-            path="/patients"
-            render={(props) => <WithAuth Component={Patients} {...props} />}
+            path="/firstPage"
+            render={(props) => <WithAuth Component={FirstPage} {...props} />}
           />
           <Route path="/aboutus" component={AboutUs} />
         </Switch>

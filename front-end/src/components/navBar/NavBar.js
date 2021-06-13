@@ -56,7 +56,7 @@ function NavBar(props) {
               <Link
                 variant="button"
                 color="textPrimary"
-                href="/patients "
+                href="/firstPage "
                 className={classes.link}
               >
                 Home

@@ -22,13 +22,12 @@ const styles = (theme) => ({
 });
 
 
-class Patients extends React.Component {
+class FirstPage extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      addingPatient: 0,
       createDown: false,
       buyDown: false,
       itemsDown: false,
@@ -36,7 +35,6 @@ class Patients extends React.Component {
     this.sayHello = this.sayHello.bind(this);
     this.sayBuy = this.sayBuy.bind(this);
     this.sayItems = this.sayItems.bind(this);
-    sessionStorage.setItem('patientsOn', true);
   }
 
 
@@ -65,7 +63,7 @@ class Patients extends React.Component {
   render() {
 
     return (
-      <Router path="/patients">
+      <Router path="/firstPage">
 
 
         <Grid
@@ -147,4 +145,4 @@ class Patients extends React.Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(Patients);
+export default withStyles(styles, { withTheme: true })(FirstPage);
