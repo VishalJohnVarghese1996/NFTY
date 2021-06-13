@@ -20,16 +20,24 @@ const Homepage = () => {
 		const gas = 7000000;
 	
 		const result = await NftContract.methods
-		.tokenURI(1)
+		.tokenURI(sessionStorage.getItem("userImage"))
 		.call({ from: account, gas });
 
 		setTokenUri(result);
 
-
+		const result2 = await NftContract.methods
+		.getTokenDetails(sessionStorage.getItem("userImage"))
+		.call({ from: account, gas });
 
 		Axios.get(`http://localhost:3001/api/oneItem${sessionStorage.getItem("userImage")}`).then((response) => {
 			setReviewList(response.data);
 		})
+
+		Axios.get(`http://localhost:3001/api/getCreator${result2[0]}`).then((response) => {
+			// setReviewList(response.data);
+			console.log("ehy")
+		})
+
 	}, [])
 
 	const [value, setValue] = useState(null)
@@ -64,21 +72,14 @@ const Homepage = () => {
 
 						<div id='parent_div_2'>
 							<div>
-								<p id="tokenName"><u>Name: {val.user_name}</u></p>
-								<p>Price : {val.price}ETH</p>
-								<p>498 of 500 available</p>
+								
+								<p id="tokenName"><u>Name:  {tokenUri.split(',')[0].split(':')[1]}</u></p>
+								<p>Price : {tokenUri.split(',')[2].split(':')[1]}ETH</p>
 								<p>Creator : Shahid&nbsp;  &nbsp; &nbsp; &nbsp;<a href="https://etherscan.io/tx/0x454d70395bd6898c33f6a34eac4b17a4a5d30d46355144711d2b784d70bff1e1">Transaction id</a></p>
-								<p> Created on : 29:05:2021 </p>
-								<p>10% of sales will go to creator</p>
+								<p> Created on : {val.date} </p>
+								<p>{tokenUri.split(',')[4].split(':')[1].replace('}', '')}% of sales will go to creator</p>
 								<hr></hr>
-								<p id="description">Description : Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-								Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-								when an unknown printer took a galley of type and scrambled it to make a type
-								specimen book. It has survived not only five centuries, but also the leap into
-								electronic typesetting, remaining essentially unchanged. It was popularised in
-								the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-								and more recently with desktop publishing software like Aldus PageMaker
-							including versions of Lorem Ipsum.</p>
+								<p id="description">Description : {tokenUri.split(',')[1].split(':')[1]}</p>
 							</div>
 							
 							<hr></hr>
@@ -93,15 +94,10 @@ const Homepage = () => {
 							<hr></hr>
 							<button class="transferbtn" onClick={() => handleEvent(1, val.token_id)}>Transfer</button>
 
-							{console.log(tokenUri.split(',')[0].split(':')[1])}
+							{/* {console.log(tokenUri.split(','))} */}
 						</div>
-
-
 					</div>
-
 				)
-
-
 			})}
 
 		</div>

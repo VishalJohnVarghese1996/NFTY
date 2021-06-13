@@ -58,6 +58,7 @@ function ItemsPage() {
         Axios.get(`http://localhost:3001/api/get${sessionStorage.getItem("Address")}`).then((response) => {
             setReviewList(response.data);
         })
+
     }, [])
 
 

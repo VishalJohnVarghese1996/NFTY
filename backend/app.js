@@ -406,6 +406,26 @@ app.get("/api/oneItem:UserImage", (req, res) => {
 
 });
 
+app.get("/api/getCreator:creator", (req, res) => {
+
+
+  const creatorAddress = req.params.creator;
+  const sqlGetItemCreator = "SELECT * FROM user_data where public_address = ?;"
+
+  db.query(sqlGetItemCreator, [creatorAddress.toString()], (err, result) => {
+    // console.log(result);
+
+    // res.send(result);
+
+    console.log(result[0].user_name);
+
+    // console.log(result[0].image.length);
+  });
+
+
+});
+
+
 
 app.get("/api/get:Address", (req, res) => {
 
@@ -440,6 +460,8 @@ app.post("/api/getBuyDetails", (req, res) => {
     // console.log(result[0].address);
     // console.log(result[0].price);
   });
+
+
 
 
 });
