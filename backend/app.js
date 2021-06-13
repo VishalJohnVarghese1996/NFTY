@@ -59,10 +59,6 @@ app.post("/api/createTokenImage", async (req, res) => {
 
   const title = req.body.title;
   const price = req.body.price;
-  // const copiesCount = req.body.copiesCount;
-  // const royalties = req.body.royalties;
-  // const description = req.body.description;
-  // var date = Date().toLocaleString();
 
   var dt = new Date();
 
@@ -74,19 +70,11 @@ app.post("/api/createTokenImage", async (req, res) => {
 
   var date = dt.toLocaleDateString("en", options)
 
-  // var low_res;
-
-  // const user_name = req.params.UserId;
   const data = req.files.file.data;
   const tokenArray = JSON.parse(req.body.tokenArray);
   const txHash = req.body.txHash;
   const ownerAddress = req.body.owner;
   const action = req.body.action;
-
-  // console.log(tokenArray);
-  // console.log(tokenArray.length);
-  // console.log(tokenArray[2]);
-  // console.log(req.body.txHash);
 
   const low_res = await sharp(data)
     .metadata()
@@ -114,26 +102,6 @@ app.post("/api/createTokenImage", async (req, res) => {
     })
 
   }
-
-
-  // const sqlgetMaxImgId = "SELECT image_id FROM nft_db.image_data order by image_id desc limit 1;"
-
-  // var maxImageID = 0;
-
-  // db.query(sqlgetMaxImgId, (err, result) => {
-  //   result = Object.values(JSON.parse(JSON.stringify(result)));
-  //   maxImageID = result[0].image_id;
-  //   console.log(err)
-  // })
-
-  // const sqlInsert = "INSERT INTO image_data (image_id, user_name, image, low_res_image, price, royalties, date, title, copies) VALUES (?,?,?,?,?,?,?,?,?);"
-
-  // db.query(sqlInsert, [maxImageID, user_name, data, low_res, price, royalties, date, title, copiesCount], (err, result) => {
-  //   console.log(err);
-  // })
-
-
-  // })
 
 });
 
@@ -326,11 +294,7 @@ app.get("/api/buy:Address", (req, res) => {
   const sqlBuy = "SELECT * FROM image_data where address <> ?;"
 
   db.query(sqlBuy, [Address], (err, result) => {
-    // console.log(result);
-
     res.send(result);
-
-    // console.log(result[0].image.length);
   });
 
 
@@ -396,11 +360,7 @@ app.get("/api/oneItem:UserImage", (req, res) => {
   const sqlGetItem = "SELECT * FROM image_data where token_id = ?;"
 
   db.query(sqlGetItem, [UserImage], (err, result) => {
-    // console.log(result);
-
     res.send(result);
-
-    // console.log(result[0].image.length);
   });
 
 
@@ -413,13 +373,7 @@ app.get("/api/getCreator:creator", (req, res) => {
   const sqlGetItemCreator = "SELECT * FROM user_data where public_address = ?;"
 
   db.query(sqlGetItemCreator, [creatorAddress.toString()], (err, result) => {
-    // console.log(result);
-
-    // res.send(result);
-
     console.log(result[0].user_name);
-
-    // console.log(result[0].image.length);
   });
 
 
@@ -430,16 +384,11 @@ app.get("/api/getCreator:creator", (req, res) => {
 app.get("/api/get:Address", (req, res) => {
 
   const address = req.params.Address;
-  // console.log(UserId)
 
   const sqlGet = "SELECT * FROM image_data where address=?;"
 
   db.query(sqlGet, [address], (err, result) => {
-    // console.log(result);
-
     res.send(result);
-
-    // console.log(result[0].image.length);
   });
 
 
@@ -453,12 +402,7 @@ app.post("/api/getBuyDetails", (req, res) => {
   const sqlGetDetails = "SELECT address, price FROM image_data where token_id = ?;"
 
   db.query(sqlGetDetails, [token_id], (err, result) => {
-    // console.log(result);
-
     res.send(result[0]);
-
-    // console.log(result[0].address);
-    // console.log(result[0].price);
   });
 
 
@@ -479,9 +423,6 @@ app.get("/imgBuy/:id", async (req, res) => {
   } else {
     res.send('No Img with that Id!');
   }
-
-  // console.log(img.image);
-
 });
 
 
