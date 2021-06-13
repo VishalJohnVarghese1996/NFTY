@@ -7,9 +7,7 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import axios from "axios";
 import React, { useState } from "react";
-import { openSnackBar } from "../snackBar/SnackBar";
 import Axios from 'axios';
 
 import Web3 from 'web3'

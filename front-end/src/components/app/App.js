@@ -15,9 +15,6 @@ import Enroll from "../enroll/Enroll";
 import Footer from "../footer/Footer";
 import Home from "../home/Home";
 import LoginAdmin from "../login/LoginAdmin";
-import LoginDoctor from "../login/LoginDoctor";
-import LoginPatient from "../login/LoginPatient";
-import PatientChangePassword from "../login/PatientChangePassword";
 import NavBar from "../navBar/NavBar";
 import Patients from "../patients/Patients";
 import SnackBar from "../snackBar/SnackBar";
@@ -101,30 +98,6 @@ export default function App() {
             }
           />
           <Route
-            path="/login/patient"
-            render={(props) =>
-              loggedIn ? (
-                <Redirect to="/patients" />
-              ) : (
-                <LoginPatient {...props} setLogin={login} />
-              )
-            }
-          />
-          <Route
-            path="/login/doctor"
-            render={(props) =>
-              loggedIn ? (
-                <Redirect to="/patients" />
-              ) : (
-                <LoginDoctor {...props} setLogin={login} />
-              )
-            }
-          />
-          {/* <Route
-            path="/profile"
-            render={(props) => <WithAuth Component={Profile} {...props} />}
-          /> */}
-          <Route
             path="/enroll"
             render={(props) =>
               loggedIn ? <Redirect to="/patients" /> : <Enroll {...props} />
@@ -133,18 +106,6 @@ export default function App() {
           <Route
             path="/patients"
             render={(props) => <WithAuth Component={Patients} {...props} />}
-          />
-          {/* <Route
-            path="/patient/:PID"
-            render={(props) => <WithAuth Component={PatientData} {...props} />}
-          /> */}
-          {/* <Route
-            path="/doctor/:DID"
-            render={(props) => <WithAuth Component={DoctorData} {...props} />}
-          /> */}
-          <Route
-            path="/patientChangePassword"
-            component={PatientChangePassword}
           />
           <Route path="/aboutus" component={AboutUs} />
         </Switch>

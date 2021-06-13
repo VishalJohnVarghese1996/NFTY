@@ -6,7 +6,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { default as React, useState } from "react";
 import { withRouter } from "react-router-dom";
-// import Popup from "../popup-login/popup.js";
 import logo1 from '../../logo1.svg';
 
 const useStyles = makeStyles((theme) => ({
