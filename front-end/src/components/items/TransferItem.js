@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import React, { useState } from "react";
 import { openSnackBar } from "../snackBar/SnackBar";
+import Axios from 'axios';
 
 import Web3 from 'web3'
 import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from '../../config'
@@ -36,12 +37,17 @@ export default function TransferItem(props) {
 
 
     const result = await NftContract.methods
-    .transferToken(recieverAddress, 1)
+    .transferToken(recieverAddress, sessionStorage.getItem("userImage"))
     .send({ from: account, gas });
 
-    // Axios.post(`http://localhost:3001/api/createTokenImage${sessionStorage.getItem("UserId")}`, formData).then(res => {
-    //   //Now do what you want with the response;
-    // })
+    const formData = new FormData();
+    formData.append('newOwner', recieverAddress); 
+    formData.append('action', "transferred");
+    formData.append('txHash', result.transactionHash);
+
+    Axios.post(`http://localhost:3001/api/transferToken${sessionStorage.getItem("userImage")}`, formData).then(res => {
+      //Now do what you want with the response;
+    })
 
   }
 

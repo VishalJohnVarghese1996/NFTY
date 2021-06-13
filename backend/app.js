@@ -9,58 +9,14 @@ const Web3 = require('web3');
 const fs = require('fs');
 const sharp = require('sharp');
 
-var im = 
+var im =
 
-app.use(express.json());
+  app.use(express.json());
 app.use(cors());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(fileUpload());
+app.use(bodyparser.json());
 
-
-
-app.post("/api/createTokenImage:UserId", async (req, res) => {
-
-
-  const title = req.body.title;
-  const price = req.body.price;
-  const copiesCount = req.body.copiesCount;
-  const royalties = req.body.royalties;
-  const user_name = req.params.UserId;
-  const description = req.body.description;
-  const data = req.files.file.data;
-  // var low_res;
-
-  var date = Date().toLocaleString();
-
-  const low_res = await sharp(data)
-  .metadata()
-  .then(({ width }) => sharp(data)
-    .resize(Math.round(width * 0.5))
-    .toBuffer()
-  );
-
-    const sqlgetMaxImgId = "SELECT image_id FROM nft_db.image_data order by image_id desc limit 1;"
-
-    var maxImageID = 0;
-  
-    db.query(sqlgetMaxImgId, (err, result) => {
-      result = Object.values(JSON.parse(JSON.stringify(result)));
-      maxImageID = result[0].image_id;
-      console.log(err)
-    })
-  
-    const sqlInsert = "INSERT INTO image_data (image_id, user_name, image, low_res_image, price, royalties, date, title, copies) VALUES (?,?,?,?,?,?,?,?,?);"
-  
-    db.query(sqlInsert, [maxImageID, user_name, data, low_res, price, royalties, date, title, copiesCount], (err, result) => {
-      console.log(err);
-    })
-
-
-
-
-  // })
-
-});
 
 
 const db = mysql.createPool({
@@ -86,26 +42,109 @@ app.post("/register", (req, res) => {
   const email = req.body.email;
   const name = req.body.name;
   const username = req.body.username;
+  const publicAddress = req.body.account;
   let password = req.body.newPassword;
   const crypto = require("crypto");
   password = crypto.createHmac("sha256", username).update(password).digest("hex");
   db.query(
-    "INSERT INTO user_data (user_name, password, name, email_id ) VALUES (?,?,?,?)",
-    [username, password, name, email],
+    "INSERT INTO user_data (user_name, password, name, email_id, public_address) VALUES (?,?,?,?,?)",
+    [username, password, name, email, publicAddress],
     (err, result) => {
       console.log(err);
     }
   );
 });
 
+app.post("/api/createTokenImage", async (req, res) => {
+
+  const title = req.body.title;
+  const price = req.body.price;
+  // const copiesCount = req.body.copiesCount;
+  // const royalties = req.body.royalties;
+  // const description = req.body.description;
+  // var date = Date().toLocaleString();
+
+  var dt = new Date();
+
+  var options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "numeric"
+  };
+
+  var date = dt.toLocaleDateString("en", options)
+
+  // var low_res;
+
+  // const user_name = req.params.UserId;
+  const data = req.files.file.data;
+  const tokenArray = JSON.parse(req.body.tokenArray);
+  const txHash = req.body.txHash;
+  const ownerAddress = req.body.owner;
+  const action = req.body.action;
+
+  // console.log(tokenArray);
+  // console.log(tokenArray.length);
+  // console.log(tokenArray[2]);
+  // console.log(req.body.txHash);
+
+  const low_res = await sharp(data)
+    .metadata()
+    .then(({ width }) => sharp(data)
+      .resize(Math.round(width * 0.5))
+      .toBuffer()
+    );
+
+
+  for (i = 0; i < tokenArray.length; i++) {
+
+    // insert into image data table
+    const sqlInsert = "INSERT INTO image_data (image, low_res_image, token_id, address, title, price, date) VALUES (?,?,?,?,?,?,?);"
+
+    db.query(sqlInsert, [data, low_res, tokenArray[i], ownerAddress, title, price, date], (err, result) => {
+      console.log(err);
+    })
+
+
+    // insert into tx table
+    const sqlInsertTx = "INSERT INTO tx_data (tx_hash, token_id, action) VALUES (?,?,?);"
+
+    db.query(sqlInsertTx, [txHash, tokenArray[i], action], (err, result) => {
+      console.log(err);
+    })
+
+  }
+
+
+  // const sqlgetMaxImgId = "SELECT image_id FROM nft_db.image_data order by image_id desc limit 1;"
+
+  // var maxImageID = 0;
+
+  // db.query(sqlgetMaxImgId, (err, result) => {
+  //   result = Object.values(JSON.parse(JSON.stringify(result)));
+  //   maxImageID = result[0].image_id;
+  //   console.log(err)
+  // })
+
+  // const sqlInsert = "INSERT INTO image_data (image_id, user_name, image, low_res_image, price, royalties, date, title, copies) VALUES (?,?,?,?,?,?,?,?,?);"
+
+  // db.query(sqlInsert, [maxImageID, user_name, data, low_res, price, royalties, date, title, copiesCount], (err, result) => {
+  //   console.log(err);
+  // })
+
+
+  // })
+
+});
+
 app.post("/loginAdmin", (req, res) => {
-  const userid = req.body.userid;
+  const username = req.body.username;
   let password = req.body.password;
   const crypto = require("crypto");
-  password = crypto.createHmac("sha256", userid).update(password).digest("hex");
+  password = crypto.createHmac("sha256", username).update(password).digest("hex");
   db.query(
     "SELECT * FROM user_data where user_name=? AND password=?",
-    [userid, password],
+    [username, password],
     (err, result) => {
       if (err) {
         res.send({ err: err });
@@ -280,17 +319,13 @@ app.get("/patients", (req, res) => {
 });
 
 
+app.get("/api/buy:Address", (req, res) => {
 
+  const Address = req.params.Address;
 
+  const sqlBuy = "SELECT * FROM image_data where address <> ?;"
 
-
-app.get("/api/buy:UserId", (req, res) => {
-
-  const UserId = req.params.UserId;
-
-  const sqlBuy = "SELECT * FROM image_data where user_name <> ?;"
-
-  db.query(sqlBuy, [UserId], (err, result) => {
+  db.query(sqlBuy, [Address], (err, result) => {
     // console.log(result);
 
     res.send(result);
@@ -301,10 +336,64 @@ app.get("/api/buy:UserId", (req, res) => {
 
 });
 
+
+app.post("/api/transferToken:userImage", (req, res) => {
+
+  const token_id = req.params.userImage;
+  const newOwner = req.body.newOwner;
+  const action = req.body.action;
+  const txHash = req.body.txHash;
+
+  var dt = new Date();
+
+  var options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "numeric"
+  };
+
+  var date = dt.toLocaleDateString("en", options)
+
+  // transfer token
+  const sqlBuy = "UPDATE image_data SET address = ?, date = ? WHERE token_id = ?;"
+  db.query(sqlBuy, [newOwner, date, token_id], (err, result) => {
+  });
+
+  // add tx to tx_data
+  const sqlInsertTx = "INSERT INTO tx_data (tx_hash, token_id, action) VALUES (?,?,?);"
+
+  db.query(sqlInsertTx, [txHash, token_id, action], (err, result) => {
+    console.log(err);
+  })
+
+});
+
+
+app.post("/api/buyToken:userImage", (req, res) => {
+
+  const token_id = req.params.userImage;
+  const newOwner = req.body.newOwner;
+  const action = req.body.action;
+  const txHash = req.body.txHash;
+
+  // transfer token
+  const sqlBuy = "UPDATE image_data SET address = ?, date = ? WHERE token_id = ?;"
+  db.query(sqlBuy, [newOwner, date, token_id], (err, result) => {
+  });
+
+  // add tx to tx_data
+  const sqlInsertTx = "INSERT INTO tx_data (tx_hash, token_id, action) VALUES (?,?,?);"
+
+  db.query(sqlInsertTx, [txHash, token_id, action], (err, result) => {
+    console.log(err);
+  })
+
+});
+
 app.get("/api/oneItem:UserImage", (req, res) => {
 
   const UserImage = req.params.UserImage;
-  const sqlGetItem = "SELECT * FROM image_data where image_id = ?;"
+  const sqlGetItem = "SELECT * FROM image_data where token_id = ?;"
 
   db.query(sqlGetItem, [UserImage], (err, result) => {
     // console.log(result);
@@ -318,14 +407,14 @@ app.get("/api/oneItem:UserImage", (req, res) => {
 });
 
 
-app.get("/api/get:UserId", (req, res) => {
+app.get("/api/get:Address", (req, res) => {
 
-  const UserId = req.params.UserId;
+  const address = req.params.Address;
   // console.log(UserId)
 
-  const sqlGet = "SELECT * FROM image_data where user_name=?;"
+  const sqlGet = "SELECT * FROM image_data where address=?;"
 
-  db.query(sqlGet, [UserId], (err, result) => {
+  db.query(sqlGet, [address], (err, result) => {
     // console.log(result);
 
     res.send(result);
@@ -336,11 +425,29 @@ app.get("/api/get:UserId", (req, res) => {
 
 });
 
+app.post("/api/getBuyDetails", (req, res) => {
+
+  const token_id = req.body.token_id;
+
+
+  const sqlGetDetails = "SELECT address, price FROM image_data where token_id = ?;"
+
+  db.query(sqlGetDetails, [token_id], (err, result) => {
+    // console.log(result);
+
+    res.send(result[0]);
+
+    // console.log(result[0].address);
+    // console.log(result[0].price);
+  });
+
+
+});
 
 app.get("/imgBuy/:id", async (req, res) => {
 
   const id = req.params.id;
-  const img = await knex('image_data').where({ image_id: id }).first();
+  const img = await knex('image_data').where({ token_id: id }).first();
 
 
   if (img) {
@@ -359,8 +466,7 @@ app.get("/imgBuy/:id", async (req, res) => {
 app.get("/imgMy/:id", async (req, res) => {
 
   const id = req.params.id;
-  const img = await knex('image_data').where({ image_id: id }).first();
-
+  const img = await knex('image_data').where({ token_id: id }).first();
 
   if (img) {
     const contentType = await FileType.fromBuffer(img.image); // get the mimetype of the buffer (in this case its gonna be jpg but can be png or w/e)
@@ -371,7 +477,6 @@ app.get("/imgMy/:id", async (req, res) => {
   }
 
 });
-
 
 
 app.listen(3001, () => {

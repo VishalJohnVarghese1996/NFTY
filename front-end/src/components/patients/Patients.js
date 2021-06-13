@@ -35,22 +35,42 @@ class Patients extends React.Component {
 
     this.state = {
       addingPatient: 0,
+      createDown: false,
+      buyDown: false,
+      itemsDown: false,
     }
     this.sayHello = this.sayHello.bind(this);
+    this.sayBuy = this.sayBuy.bind(this);
+    this.sayItems = this.sayItems.bind(this);
+    sessionStorage.setItem('patientsOn', true);
   }
 
-  sayHello(val) {
-    this.setState({ addingPatient: val });
-    alert(this.state.addingPatient);
 
+  sayHello() {
+    this.setState({ buyDown: false });
+    this.setState({ itemsDown: false });
+    this.setState({ createDown: !this.state.createDown });
+  }
+
+  sayBuy() {
+    this.setState({ createDown: false });
+    this.setState({ itemsDown: false });
+    this.setState({ buyDown: !this.state.buyDown });
+    // alert(this.state.buyDown);
+  }
+
+  sayItems() {
+    this.setState({ createDown: false });
+    this.setState({ buyDown: false });
+    this.setState({ itemsDown: !this.state.itemsDown });
+    // alert(this.state.buyDown);
   }
 
 
 
   render() {
-    
 
-    console.log(sessionStorage.getItem('UserId'))
+    // console.log(sessionStorage.getItem('UserId'))
     return (
       <Router path="/patients">
 
@@ -61,9 +81,6 @@ class Patients extends React.Component {
           direction="row"
         >
 
-
-        
-
           <Link to="/create">
             <Button
               type="submit"
@@ -71,9 +88,10 @@ class Patients extends React.Component {
               variant="contained"
               size="large"
               color="primary"
-              style={{ fontFamily: 'Patrick Hand SC', margin: '20px 20px 20px 145px', height: '70px', width: '500px', fontSize: '30px' }}>
+              onClick={this.sayHello}
+              style={{ fontFamily: 'Patrick Hand SC', margin: '15px 20px 20px 145px', height: '70px', width: '500px', fontSize: '30px' }}
             >Create Token
-      </Button>
+            </Button>
 
           </Link>
 
@@ -85,13 +103,11 @@ class Patients extends React.Component {
               variant="contained"
               size="large"
               color="primary"
+              onClick={this.sayBuy}
               style={{ fontFamily: 'Patrick Hand SC', margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
             >Buy Token
-      </Button>
+            </Button>
           </Link>
-
-
-
 
           <Link to="/items">
             <Button
@@ -100,23 +116,33 @@ class Patients extends React.Component {
               variant="contained"
               size="large"
               color="primary"
-              style={{fontFamily: 'Patrick Hand SC', margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
+              onClick={this.sayItems}
+              style={{ fontFamily: 'Patrick Hand SC', margin: '15px', height: '70px', width: '500px', fontSize: '30px' }}
             >My Items
             </Button>
           </Link>
 
           <Switch>
             <Route path="/create">
-              <Create />
+              {this.state.createDown ? (
+                <Create />
+              ) : (
+                null
+              )}
             </Route>
             <Route path="/buy">
-              <Buy />
-            </Route>
-            <Route path="/transfer">
-              <Transfer />
+              {this.state.buyDown ? (
+                <Buy />
+              ) : (
+                null
+              )}
             </Route>
             <Route path="/items">
-              <Items />
+              {this.state.itemsDown ? (
+                <Items />
+              ) : (
+                null
+              )}
             </Route>
           </Switch>
         </Grid>

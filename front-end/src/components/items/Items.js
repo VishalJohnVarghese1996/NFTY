@@ -24,6 +24,12 @@ import Homepage from './Homepage'
 
 import TransferItem from './TransferItem'
 
+import Web3 from 'web3'
+import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from '../../config'
+
+const web3 = new Web3(Web3.givenProvider);
+const NftContract = new web3.eth.Contract(TODO_LIST_ABI, TODO_LIST_ADDRESS);
+
 
 const useStyles = makeStyles({
     root: {
@@ -39,6 +45,7 @@ function ItemsPage() {
     const [value, setValue] = useState(null)
     const [componentToRender, setComponentToRender] = useState(null)
     const [movieReviewList, setReviewList] = useState([])
+    const [tokenUri, setTokenUri] = useState("");
 
     const handleEvent = (button, imagVal) => {
         setValue(button);
@@ -48,15 +55,15 @@ function ItemsPage() {
 
     useEffect(() => {
 
-        Axios.get(`http://localhost:3001/api/get${sessionStorage.getItem("UserId")}`).then((response) => {
+        Axios.get(`http://localhost:3001/api/get${sessionStorage.getItem("Address")}`).then((response) => {
             setReviewList(response.data);
         })
     }, [])
 
 
-    function transfer(){
+    function transfer() {
         var receiverAddress = prompt("Enter public address of reciver.");
-        
+
     }
 
     const renderComponent = () => {
@@ -69,23 +76,22 @@ function ItemsPage() {
                 return (<div>
                     <h1>Welcome to Basic Page</h1>
 
-
-
                     {movieReviewList.map((val) => {
 
                         return (
                             <div class="card">
                                 <div class="card-image">
-                                    <img src={'http://localhost:3001/imgMy/' + val.image_id} alt="hey" id="img" onClick={() => handleEvent(1, val.image_id)}>
+                                    <img src={'http://localhost:3001/imgMy/' + val.token_id} alt="hey" id="img" onClick={() => handleEvent(1, val.token_id)}>
                                     </img>
                                 </div>
                                 <div class="card-text">
-                                    <span class="date">4 days ago</span>
-                                    <h2>Owner : {val.user_name}</h2>
-                                    <h2>Price : {val.price} eth</h2>
+                                    <span class="date">Got on {val.date}</span>
+                                    <h2>Title : {val.title}</h2>
+                                    <h2>Price : {val.price}eth</h2>
+                                    <h2>Token ID: {val.token_id}</h2>
                                 </div>
                                 <div class="card-stat">
-                                    <button class="transferbtn" onClick={() => handleEvent(2, val.image_id)}>TRANSFER</button>
+                                    <button class="transferbtn" onClick={() => handleEvent(2, val.token_id)}>TRANSFER</button>
                                 </div>
                             </div>
                         )

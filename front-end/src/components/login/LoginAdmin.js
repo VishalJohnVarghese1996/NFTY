@@ -11,6 +11,12 @@ import axios from "axios";
 import React, { useState } from "react";
 import { openSnackBar } from "../snackBar/SnackBar";
 
+import Web3 from 'web3'
+import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from '../../config'
+
+const web3 = new Web3(Web3.givenProvider);
+const NftContract = new web3.eth.Contract(TODO_LIST_ABI, TODO_LIST_ADDRESS);
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(4),
@@ -18,15 +24,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login(props) {  
-  const [userid, setUserid] = useState("");
+  const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const classes = useStyles();
 
-  const handleSubmit = (e) => {
+  
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const accounts = await window.ethereum.enable();
+    const account = accounts[0];
+
     axios
       .post(`http://localhost:3001/loginAdmin/`, {
-        userid,
+        username,
         password,
       })
       .then((res) => {
@@ -36,8 +48,8 @@ export default function Login(props) {
         ) {
           const token = res.data.token;
           props.setLogin(token);
-          sessionStorage.setItem('UserId', userid);
-          console.log(userid);
+          sessionStorage.setItem('Address', account);
+          console.log(username);
           props.history.push("/patients");
           return;
         } else {
@@ -70,16 +82,16 @@ export default function Login(props) {
                 color="textPrimary"
                 gutterBottom
               >
-                Please provide userID and password
+                Please provide user-name and password
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth required>
-                <InputLabel htmlFor="username-input">User ID</InputLabel>
+                <InputLabel htmlFor="username-input">User Name</InputLabel>
                 <Input
                   id="userid-input"
-                  value={userid}
-                  onChange={(e) => setUserid(e.target.value)}
+                  value={username}
+                  onChange={(e) => setUserName(e.target.value)}
                   required
                 />
               </FormControl>

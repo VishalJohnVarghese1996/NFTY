@@ -9,6 +9,8 @@ import {
     Route,
     Link
 } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
 
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -50,9 +52,10 @@ function ItemsPage() {
         sessionStorage.setItem('userImage', imagVal);
     };
 
+
     useEffect(() => {
 
-        Axios.get(`http://localhost:3001/api/buy${sessionStorage.getItem("UserId")}`).then((response) => {
+        Axios.get(`http://localhost:3001/api/buy${sessionStorage.getItem("Address")}`).then((response) => {
             setReviewList(response.data);
         })
     }, [])
@@ -60,19 +63,41 @@ function ItemsPage() {
 
     const buyToken = async (e) => {
         e.preventDefault()
-    
+
         const accounts = await window.ethereum.enable();
         const account = accounts[0];
-    
+
         // const gas = await HelloContract.methods.sendBal('0x9c9e37934CC8Dd832E8C2406324Dd04D5CdE715f').estimateGas();
-    
+
         const gas = 7000000;
-    
-    
-        const result = await NftContract.methods
-        .buyNft("0x82c6F7c21DD6e9266EBc383cB3ba351595EE0b5D", 1)
-        .send({ from: account, gas });
-      }
+
+        // call backend api and get owner or seller address of this token id
+        const formData = new FormData();
+        formData.append('token_id', e.target.value);
+
+        var owner;
+        var price;
+
+        Axios.post("http://localhost:3001/api/getBuyDetails", formData).then(async (response) => {
+            // setReviewList(response.data);
+            owner = response.data.address;
+            price = response.data.price;
+
+            const result = await NftContract.methods
+                .buyNft(owner, e.target.value)
+                .send({ from: account, gas, value: web3.utils.toWei(price.toString(), "ether") });
+
+
+            const formData = new FormData();
+            formData.append('newOwner', account);
+            formData.append('action', "bought");
+            formData.append('txHash', result.transactionHash);
+
+            Axios.post(`http://localhost:3001/api/transferToken${e.target.value}`, formData).then(res => {
+                //Now do what you want with the response;
+            })
+        })
+    }
 
     const renderComponent = () => {
         switch (componentToRender) {
@@ -83,22 +108,23 @@ function ItemsPage() {
                     <h1>Welcome to Items Page</h1>
 
 
-
                     {movieReviewList.map((val) => {
 
                         return (
                             <div class="card">
                                 <div class="card-image">
-                                    <img src={'http://localhost:3001/imgBuy/' + val.image_id} alt="hey" id="img" onClick={() => handleEvent(1, val.image_id)}>
+                                    <img src={'http://localhost:3001/imgBuy/' + val.token_id} alt="hey" id="img" onClick={() => handleEvent(1, val.token_id)}>
                                     </img>
                                 </div>
                                 <div class="card-text">
-                                    <span class="date">4 days ago</span>
-                                    <h2>Owner : {val.user_name}</h2>
-                                    <h2>Price : {val.price} eth</h2>
+                                    <span class="date">Got on {val.date}</span>
+                                    <h2>Title : {val.title}</h2>
+                                    <h2>Price : {val.price}eth</h2>
+                                    <h2>Token ID: {val.token_id}</h2>
                                 </div>
                                 <div class="card-stat">
-                                   <button class="buybtn" onClick={buyToken}>BUY</button>
+                                    <button class="buybtn" value={val.token_id} onClick={e => buyToken(e, "value")}>BUY</button>
+
                                 </div>
                             </div>
 
@@ -119,6 +145,7 @@ function ItemsPage() {
             </div>
             {renderComponent()}
         </div>
+
 
     )
 }

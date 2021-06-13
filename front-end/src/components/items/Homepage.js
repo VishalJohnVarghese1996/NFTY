@@ -19,7 +19,6 @@ const Homepage = () => {
 		const account = accounts[0];
 		const gas = 7000000;
 	
-	
 		const result = await NftContract.methods
 		.tokenURI(1)
 		.call({ from: account, gas });
@@ -60,7 +59,7 @@ const Homepage = () => {
 					<div>
 						
 						<div id='parent_div_1'>
-							<img src={'http://localhost:3001/imgMy/' + val.image_id} alt="hey" id="imgItem"></img>
+							<img src={'http://localhost:3001/imgMy/' + val.token_id} alt="hey" id="imgItem"></img>
 						</div>
 
 						<div id='parent_div_2'>
@@ -92,9 +91,9 @@ const Homepage = () => {
 								Ashutosh&nbsp; &nbsp; &nbsp;<a href="https://etherscan.io/tx/0x454d70395bd6898c33f6a34eac4b17a4a5d30d46355144711d2b784d70bff1e1">Transaction id</a>
 							</p>
 							<hr></hr>
-							<button class="transferbtn" onClick={() => handleEvent(1, val.image_id)}>Transfer</button>
+							<button class="transferbtn" onClick={() => handleEvent(1, val.token_id)}>Transfer</button>
 
-							{alert(tokenUri)}
+							{console.log(tokenUri.split(',')[0].split(':')[1])}
 						</div>
 
 

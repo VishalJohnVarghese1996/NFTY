@@ -16,11 +16,9 @@ import { openSnackBar } from "../snackBar/SnackBar";
 // import UserProfile from '../login/SessionDetails';
 
 import Web3 from 'web3'
-
 import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from '../../config'
 
 const web3 = new Web3(Web3.givenProvider);
-
 const NftContract = new web3.eth.Contract(TODO_LIST_ABI, TODO_LIST_ADDRESS);
 
 
@@ -41,6 +39,7 @@ export default function CreatePage(props) {
   const [royalties, setRoyalties] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
+  // const [tokenArray, setTokenArray] = useState([]);
 
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -48,6 +47,10 @@ export default function CreatePage(props) {
   };
 
   const classes = useStyles();
+
+  // useEffect(() => {
+  //   console.log("====");
+  // })
 
   const { register, handleSubmit } = useForm()
 
@@ -75,25 +78,38 @@ export default function CreatePage(props) {
       + '}';
 
       const result = await NftContract.methods
-      .mintNft(account.toString(16), baseURI)
+      .mintNft(baseURI, copiesCount, price, royalties)
       .send({ from: account, gas });
 
+      console.log(result.transactionHash)
+
+
+      var tokenArray = new Array(result.events.Transfer.length);
+      var i;
+      for (i = 0; i < result.events.Transfer.length; i++) {
+        console.log(result.events.Transfer[i].returnValues.tokenId);
+        tokenArray[i] = result.events.Transfer[i].returnValues.tokenId;
+      }
+
+
     setImage(data.pic[0]);
-    // e.preventDefault();
 
     const formData = new FormData();
     formData.append('file', data.pic[0]);
     formData.append('title', title); 
-    formData.append('description', description); 
+    // formData.append('description', description); 
     formData.append('price', price); 
-    formData.append('copiesCount', copiesCount); 
-    formData.append('royalties', royalties); 
+    // formData.append('copiesCount', copiesCount); 
+    // formData.append('royalties', royalties); 
+    formData.append('owner', account);
+    formData.append('action', "minted");
+    formData.append('txHash',result.transactionHash);
+    formData.append('tokenArray', JSON.stringify(tokenArray));
+  
 
-    Axios.post(`http://localhost:3001/api/createTokenImage${sessionStorage.getItem("UserId")}`, formData).then(res => {
+    Axios.post("http://localhost:3001/api/createTokenImage", formData).then(res => {
       //Now do what you want with the response;
     })
-
-    console.log("token created");
   }
 
   return (

@@ -11,6 +11,12 @@ import axios from "axios";
 import React, { useState } from "react";
 import { openSnackBar } from "../snackBar/SnackBar";
 
+import Web3 from 'web3'
+import { TODO_LIST_ABI, TODO_LIST_ADDRESS } from '../../config'
+
+const web3 = new Web3(Web3.givenProvider);
+const NftContract = new web3.eth.Contract(TODO_LIST_ABI, TODO_LIST_ADDRESS);
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(4),
@@ -34,9 +40,11 @@ export default function Enroll(props) {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validateForm();
+    const accounts = await window.ethereum.enable();
+    const account = accounts[0];
     if (errors.length) {
       errors.forEach((error) => {
         openSnackBar({ message: error, type: "error" });
@@ -49,6 +57,7 @@ export default function Enroll(props) {
           name,
           email,
           newPassword,
+          account,
         })
         .then((res) => {
           console.log(res);
