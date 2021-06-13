@@ -11,7 +11,6 @@ import {
 } from "react-router-dom";
 import AboutUs from "../aboutUs/AboutUs";
 import WithAuth from "../auth/WithAuth";
-import DoctorData from "../doctor/DoctorData";
 import Enroll from "../enroll/Enroll";
 import Footer from "../footer/Footer";
 import Home from "../home/Home";
@@ -20,9 +19,7 @@ import LoginDoctor from "../login/LoginDoctor";
 import LoginPatient from "../login/LoginPatient";
 import PatientChangePassword from "../login/PatientChangePassword";
 import NavBar from "../navBar/NavBar";
-import PatientData from "../patient/PatientData";
 import Patients from "../patients/Patients";
-import Profile from "../profile/Profile";
 import SnackBar from "../snackBar/SnackBar";
 import "./App.css";
 

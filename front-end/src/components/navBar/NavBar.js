@@ -6,7 +6,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { default as React, useState } from "react";
 import { withRouter } from "react-router-dom";
-import Popup from "../popup-login/popup.js";
+// import Popup from "../popup-login/popup.js";
 import logo1 from '../../logo1.svg';
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +36,7 @@ function NavBar(props) {
 
   return (
     <div>
-      {displayPopup && <Popup />}
+      {displayPopup}
       <AppBar
         position="static"
         color="default"
@@ -118,6 +118,23 @@ function NavBar(props) {
             </a>
 
           )}
+
+          {props.loggedIn ? (
+            <a href="/profile">
+              <Button
+                color="primary"
+                variant="outlined"
+                className={classes.link}
+              >
+                Profile
+            </Button>
+            </a>
+          ) : (
+            null
+
+          )}
+
+
 
         </Toolbar>
       </AppBar>
